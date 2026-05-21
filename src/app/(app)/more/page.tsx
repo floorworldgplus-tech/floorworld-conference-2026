@@ -35,11 +35,14 @@ export default async function MorePage() {
   } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabase
+  const { data: profileData } = await supabase
     .from('profiles')
     .select('full_name, email, role, company')
     .eq('id', user.id)
     .single()
+
+  type ProfileRow = { full_name: string | null; email: string | null; role: string; company: string | null }
+  const profile = profileData as ProfileRow | null
 
   const isAdmin = profile?.role === 'admin' || profile?.role === 'nso_staff'
 

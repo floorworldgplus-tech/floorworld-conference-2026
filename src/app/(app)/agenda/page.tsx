@@ -15,6 +15,8 @@ const TYPE_BADGE: Record<string, { label: string; colour: string }> = {
   free_time: { label: 'Free time', colour: 'bg-gray-200 text-gray-600'  },
 }
 
+type UserSessionRow = { session_id: string }
+
 export default async function AgendaPage() {
   const supabase = await createClient()
   const {
@@ -27,7 +29,7 @@ export default async function AgendaPage() {
     supabase.from('user_sessions').select('session_id').eq('user_id', user.id),
   ])
 
-  const mySavedIds = new Set((mySessionRows ?? []).map((r) => r.session_id))
+  const mySavedIds = new Set(((mySessionRows ?? []) as UserSessionRow[]).map((r) => r.session_id))
 
   // Group by day (KL time)
   const grouped: Record<string, Session[]> = {}
