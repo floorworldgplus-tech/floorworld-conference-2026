@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   Calendar, Stamp, Users, Building2, Plane, BookOpen,
   HelpCircle, MessageSquare, LayoutDashboard, Megaphone,
@@ -14,9 +15,9 @@ const SESSION_TYPE_COLOUR: Record<string, string> = {
   workshop:  'bg-brand-yellow',
   social:    'bg-brand-red',
   meal:      'bg-orange-400',
-  transfer:  'bg-gray-400',
+  transfer:  'bg-gray-300',
   excursion: 'bg-purple-500',
-  free_time: 'bg-gray-300',
+  free_time: 'bg-gray-200',
 }
 
 export default async function HomePage() {
@@ -69,68 +70,89 @@ export default async function HomePage() {
   const isDelegate = profile?.role === 'delegate'
 
   const quickLinks = [
-    { href: '/agenda',       icon: Calendar,       label: 'Agenda',     bg: 'bg-blue-50',   fg: 'text-brand-blue'  },
-    { href: '/travel',       icon: Plane,          label: 'Travel',     bg: 'bg-green-50',  fg: 'text-brand-green' },
-    { href: '/suppliers',    icon: Building2,      label: 'Suppliers',  bg: 'bg-yellow-50', fg: 'text-brand-yellow'},
-    { href: '/delegates',    icon: Users,          label: 'Delegates',  bg: 'bg-orange-50', fg: 'text-brand-red'   },
-    { href: '/resources',    icon: BookOpen,       label: 'Resources',  bg: 'bg-purple-50', fg: 'text-purple-600'  },
-    { href: '/feedback',     icon: MessageSquare,  label: 'Feedback',   bg: 'bg-pink-50',   fg: 'text-pink-600'    },
-    { href: '/help',         icon: HelpCircle,     label: 'Help',       bg: 'bg-gray-100',  fg: 'text-gray-600'    },
+    { href: '/agenda',    icon: Calendar,      label: 'Agenda',    bg: 'bg-blue-50',   fg: 'text-brand-blue'   },
+    { href: '/travel',    icon: Plane,         label: 'Travel',    bg: 'bg-green-50',  fg: 'text-brand-green'  },
+    { href: '/suppliers', icon: Building2,     label: 'Suppliers', bg: 'bg-yellow-50', fg: 'text-brand-yellow' },
+    { href: '/delegates', icon: Users,         label: 'People',    bg: 'bg-orange-50', fg: 'text-brand-red'    },
+    { href: '/resources', icon: BookOpen,      label: 'Resources', bg: 'bg-purple-50', fg: 'text-purple-600'   },
+    { href: '/feedback',  icon: MessageSquare, label: 'Feedback',  bg: 'bg-pink-50',   fg: 'text-pink-600'     },
+    { href: '/help',      icon: HelpCircle,    label: 'Help',      bg: 'bg-gray-100',  fg: 'text-gray-500'     },
     ...(isAdmin
       ? [{ href: '/admin', icon: LayoutDashboard, label: 'Admin', bg: 'bg-brand-blue', fg: 'text-white' }]
       : []),
   ]
 
   return (
-    <div>
-      {/* Hero header */}
-      <div className="bg-brand-blue px-5 pt-6 pb-8">
-        <p className="text-blue-100 text-xs font-medium uppercase tracking-wide mb-1">
-          Growing Stronger Together
-        </p>
-        <h1 className="text-white text-2xl font-bold">Hey, {firstName} 👋</h1>
-        <p className="text-blue-200 text-sm mt-0.5">
-          {profile?.company ?? 'Kuala Lumpur · Aug 16–21, 2026'}
-        </p>
+    <div className="bg-gray-50 min-h-screen">
+
+      {/* ── Hero header ── */}
+      <div className="bg-white border-b border-gray-100">
+        {/* Thin brand bar */}
+        <div className="h-0.5 bg-gradient-to-r from-brand-blue via-brand-green to-brand-yellow" />
+
+        <div className="px-5 pt-5 pb-6">
+          <div className="flex items-center gap-4">
+            <Image
+              src="/conference-logo.png"
+              alt="Floorworld Conference 2026"
+              width={58}
+              height={58}
+              className="rounded-2xl flex-shrink-0 border border-gray-100"
+              priority
+            />
+            <div className="min-w-0">
+              <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest leading-none mb-1">
+                KL · Aug 16–21, 2026
+              </p>
+              <h1 className="text-[1.35rem] font-bold text-gray-900 leading-tight">
+                Hey, {firstName} 👋
+              </h1>
+              {profile?.company && (
+                <p className="text-sm text-gray-500 mt-0.5 truncate">{profile.company}</p>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="px-4 -mt-4 space-y-4 pb-4">
-        {/* Passport progress — delegates only */}
+      <div className="px-4 pt-4 space-y-5 pb-6">
+
+        {/* ── Passport progress — delegates only ── */}
         {isDelegate && (
           <Link href="/passport">
             <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center gap-4 active:scale-[0.98] transition-transform">
               <div className="w-12 h-12 bg-brand-blue/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Stamp size={24} className="text-brand-blue" />
+                <Stamp size={22} className="text-brand-blue" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-gray-900 text-sm">Expo Passport</p>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-xs text-gray-400 mt-0.5">
                   {stampCount ?? 0} of {supplierCount ?? 0} booths visited
                 </p>
-                <div className="mt-1.5 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                <div className="mt-2 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-brand-blue rounded-full transition-all"
                     style={{
                       width: supplierCount
-                        ? `${((stampCount ?? 0) / supplierCount) * 100}%`
+                        ? `${Math.min(((stampCount ?? 0) / supplierCount) * 100, 100)}%`
                         : '0%',
                     }}
                   />
                 </div>
               </div>
-              <p className="text-brand-blue font-bold text-lg flex-shrink-0">
+              <p className="text-brand-blue font-bold text-base flex-shrink-0">
                 {stampCount ?? 0}/{supplierCount ?? 0}
               </p>
             </div>
           </Link>
         )}
 
-        {/* Upcoming sessions */}
+        {/* ── Upcoming sessions ── */}
         {upcomingSessions && upcomingSessions.length > 0 && (
           <section>
-            <div className="flex items-center justify-between mb-2.5">
-              <h2 className="font-semibold text-gray-900 text-sm">Coming Up</h2>
-              <Link href="/agenda" className="text-xs text-brand-blue font-medium">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="font-bold text-gray-800 text-sm tracking-tight">Coming Up</h2>
+              <Link href="/agenda" className="text-xs text-brand-blue font-semibold">
                 Full agenda →
               </Link>
             </div>
@@ -138,16 +160,16 @@ export default async function HomePage() {
               {(upcomingSessions as Session[]).map((s) => (
                 <div
                   key={s.id}
-                  className="bg-white rounded-xl px-4 py-3 shadow-sm border border-gray-100 flex items-start gap-3"
+                  className="bg-white rounded-xl px-4 py-3.5 shadow-sm border border-gray-100 flex items-start gap-3"
                 >
                   <div
                     className={`mt-1 w-1 self-stretch min-h-[1.75rem] rounded-full flex-shrink-0 ${
-                      SESSION_TYPE_COLOUR[s.session_type] ?? 'bg-gray-300'
+                      SESSION_TYPE_COLOUR[s.session_type] ?? 'bg-gray-200'
                     }`}
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-900 text-sm leading-snug">{s.title}</p>
-                    <p className="text-xs text-gray-500 mt-0.5">
+                    <p className="font-semibold text-gray-900 text-sm leading-snug">{s.title}</p>
+                    <p className="text-xs text-gray-400 mt-0.5">
                       {formatTime(s.start_time)}
                       {s.location ? ` · ${s.location}` : ''}
                     </p>
@@ -158,12 +180,12 @@ export default async function HomePage() {
           </section>
         )}
 
-        {/* Announcements */}
+        {/* ── Announcements ── */}
         {announcements && announcements.length > 0 && (
           <section>
-            <div className="flex items-center justify-between mb-2.5">
-              <h2 className="font-semibold text-gray-900 text-sm">Announcements</h2>
-              <Link href="/announcements" className="text-xs text-brand-blue font-medium">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="font-bold text-gray-800 text-sm tracking-tight">Announcements</h2>
+              <Link href="/announcements" className="text-xs text-brand-blue font-semibold">
                 See all →
               </Link>
             </div>
@@ -171,7 +193,9 @@ export default async function HomePage() {
               {(announcements as Announcement[]).map((a) => (
                 <div
                   key={a.id}
-                  className="bg-white rounded-xl px-4 py-3 shadow-sm border border-gray-100"
+                  className={`bg-white rounded-xl px-4 py-3.5 shadow-sm border ${
+                    a.is_pinned ? 'border-brand-yellow/40' : 'border-gray-100'
+                  }`}
                 >
                   <div className="flex items-start gap-2">
                     {a.is_pinned && (
@@ -180,8 +204,8 @@ export default async function HomePage() {
                       </span>
                     )}
                     <div className="min-w-0">
-                      <p className="font-medium text-gray-900 text-sm">{a.title}</p>
-                      <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{a.body}</p>
+                      <p className="font-semibold text-gray-900 text-sm leading-snug">{a.title}</p>
+                      <p className="text-xs text-gray-500 mt-0.5 line-clamp-2 leading-relaxed">{a.body}</p>
                     </div>
                   </div>
                 </div>
@@ -190,17 +214,17 @@ export default async function HomePage() {
           </section>
         )}
 
-        {/* Quick access grid */}
+        {/* ── Quick access ── */}
         <section>
-          <h2 className="font-semibold text-gray-900 text-sm mb-2.5">Quick Access</h2>
+          <h2 className="font-bold text-gray-800 text-sm tracking-tight mb-3">Quick Access</h2>
           <div className="grid grid-cols-4 gap-1">
             {quickLinks.map(({ href, icon: Icon, label, bg, fg }) => (
               <Link key={href} href={href}>
                 <div className="flex flex-col items-center gap-1.5 py-3 active:scale-95 transition-transform">
-                  <div className={`w-12 h-12 rounded-2xl ${bg} flex items-center justify-center`}>
+                  <div className={`w-12 h-12 rounded-2xl ${bg} flex items-center justify-center shadow-sm`}>
                     <Icon size={22} className={fg} />
                   </div>
-                  <span className="text-[10px] text-gray-600 font-medium text-center leading-tight">
+                  <span className="text-[10px] text-gray-500 font-medium text-center leading-tight">
                     {label}
                   </span>
                 </div>
@@ -208,6 +232,7 @@ export default async function HomePage() {
             ))}
           </div>
         </section>
+
       </div>
     </div>
   )

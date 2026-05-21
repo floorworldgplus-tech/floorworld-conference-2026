@@ -19,11 +19,11 @@ export default function TopBar({ title, backHref, action, className }: TopBarPro
       style={{ minHeight: '3.25rem' }}
     >
       {backHref && (
-        <Link href={backHref} className="text-brand-blue -ml-1 p-1 flex-shrink-0">
+        <Link href={backHref} className="text-brand-blue -ml-1 p-1 flex-shrink-0 active:opacity-60 transition-opacity">
           <ChevronLeft size={24} />
         </Link>
       )}
-      <h1 className="flex-1 font-semibold text-gray-900 text-[1.05rem] truncate">{title}</h1>
+      <h1 className="flex-1 font-bold text-gray-900 text-[1.05rem] truncate tracking-tight">{title}</h1>
       {action && <div className="flex-shrink-0">{action}</div>}
     </header>
   )

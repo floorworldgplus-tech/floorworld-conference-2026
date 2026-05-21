@@ -7,11 +7,11 @@ import { cn } from '@/lib/utils'
 import type { UserRole } from '@/types/database'
 
 const navItems = [
-  { href: '/home',     icon: Home,        label: 'Home'     },
-  { href: '/agenda',   icon: Calendar,    label: 'Agenda'   },
-  { href: '/passport', icon: Stamp,       label: 'Passport' },
-  { href: '/delegates',icon: Users,       label: 'People'   },
-  { href: '/more',     icon: Grid3X3,     label: 'More'     },
+  { href: '/home',      icon: Home,     label: 'Home'     },
+  { href: '/agenda',    icon: Calendar, label: 'Agenda'   },
+  { href: '/passport',  icon: Stamp,    label: 'Passport' },
+  { href: '/delegates', icon: Users,    label: 'People'   },
+  { href: '/more',      icon: Grid3X3,  label: 'More'     },
 ]
 
 export default function BottomNav({ role }: { role: UserRole }) {
@@ -30,12 +30,15 @@ export default function BottomNav({ role }: { role: UserRole }) {
               key={href}
               href={href}
               className={cn(
-                'flex-1 flex flex-col items-center justify-center gap-0.5 transition-colors',
+                'flex-1 flex flex-col items-center justify-center gap-0.5 transition-colors relative',
                 isActive ? 'text-brand-blue' : 'text-gray-400'
               )}
             >
+              {isActive && (
+                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-brand-blue rounded-full" />
+              )}
               <Icon size={22} strokeWidth={isActive ? 2.25 : 1.75} />
-              <span className={cn('text-[10px]', isActive ? 'font-semibold' : 'font-medium')}>
+              <span className={cn('text-[10px]', isActive ? 'font-bold' : 'font-medium')}>
                 {label}
               </span>
             </Link>
