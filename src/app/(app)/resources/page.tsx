@@ -24,11 +24,12 @@ export default async function ResourcesPage() {
     .order('sort_order')
     .order('created_at', { ascending: false })
 
+  const resourceList = (resources ?? []) as Resource[]
   const grouped: Record<string, Resource[]> = {}
-  for (const r of resources ?? []) {
+  for (const r of resourceList) {
     const cat = r.category ?? 'General'
     if (!grouped[cat]) grouped[cat] = []
-    grouped[cat].push(r as Resource)
+    grouped[cat].push(r)
   }
 
   return (

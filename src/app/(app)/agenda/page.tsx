@@ -32,11 +32,12 @@ export default async function AgendaPage() {
   const mySavedIds = new Set(((mySessionRows ?? []) as UserSessionRow[]).map((r) => r.session_id))
 
   // Group by day (KL time)
+  const sessionList = (sessions ?? []) as Session[]
   const grouped: Record<string, Session[]> = {}
-  for (const s of sessions ?? []) {
+  for (const s of sessionList) {
     const key = formatDateKey(s.start_time)
     if (!grouped[key]) grouped[key] = []
-    grouped[key].push(s as Session)
+    grouped[key].push(s)
   }
   const days = Object.keys(grouped).sort()
 
