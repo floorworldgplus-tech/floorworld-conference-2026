@@ -3,6 +3,9 @@ import { createClient } from '@/lib/supabase/server'
 import TopBar from '@/components/layout/TopBar'
 import { Users, Building2, Stamp, HelpCircle, MessageSquare, Megaphone } from 'lucide-react'
 
+type HelpRow = { id: string; subject: string; status: string; created_at: string }
+type ProfileRow = { role: string }
+
 export default async function AdminPage() {
   const supabase = await createClient()
   const {
@@ -16,7 +19,7 @@ export default async function AdminPage() {
     .eq('id', user.id)
     .single()
 
-  const profile = profileData as { role: string } | null
+  const profile = profileData as ProfileRow | null
   if (!profile || !['admin', 'nso_staff'].includes(profile.role)) {
     redirect('/home')
   }
@@ -28,7 +31,7 @@ export default async function AdminPage() {
     { count: openHelpCount },
     { count: feedbackCount },
     { count: announcementCount },
-    { data: recentHelp },
+    { data: recentHelpData },
   ] = await Promise.all([
     supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'delegate').eq('is_active', true),
     supabase.from('suppliers').select('*', { count: 'exact', head: true }).eq('is_active', true),
@@ -44,13 +47,15 @@ export default async function AdminPage() {
       .limit(5),
   ])
 
+  const recentHelp = (recentHelpData ?? []) as HelpRow[]
+
   const stats = [
-    { label: 'Registered Delegates', value: delegateCount ?? 0, icon: Users, colour: 'bg-blue-50 text-brand-blue' },
-    { label: 'Active Suppliers', value: supplierProfileCount ?? 0, icon: Building2, colour: 'bg-yellow-50 text-brand-yellow' },
-    { label: 'Passport Stamps', value: stampCount ?? 0, icon: Stamp, colour: 'bg-green-50 text-brand-green' },
-    { label: 'Open Help Requests', value: openHelpCount ?? 0, icon: HelpCircle, colour: 'bg-red-50 text-brand-red' },
-    { label: 'Feedback Submitted', value: feedbackCount ?? 0, icon: MessageSquare, colour: 'bg-purple-50 text-purple-600' },
-    { label: 'Announcements', value: announcementCount ?? 0, icon: Megaphone, colour: 'bg-orange-50 text-orange-600' },
+    { label: 'Registered Delegates',  value: delegateCount ?? 0,       icon: Users,        colour: 'bg-blue-50 text-brand-blue'    },
+    { label: 'Active Suppliers',       value: supplierProfileCount ?? 0, icon: Building2,    colour: 'bg-yellow-50 text-brand-yellow' },
+    { label: 'Passport Stamps',        value: stampCount ?? 0,           icon: Stamp,        colour: 'bg-green-50 text-brand-green'   },
+    { label: 'Open Help Requests',     value: openHelpCount ?? 0,        icon: HelpCircle,   colour: 'bg-red-50 text-brand-red'       },
+    { label: 'Feedback Submitted',     value: feedbackCount ?? 0,        icon: MessageSquare,colour: 'bg-purple-50 text-purple-600'   },
+    { label: 'Announcements',          value: announcementCount ?? 0,    icon: Megaphone,    colour: 'bg-orange-50 text-orange-600'   },
   ]
 
   return (
@@ -82,7 +87,7 @@ export default async function AdminPage() {
             )}
           </h2>
 
-          {(!recentHelp || recentHelp.length === 0) ? (
+          {recentHelp.length === 0 ? (
             <p className="text-sm text-gray-500 py-4 text-center">No open requests.</p>
           ) : (
             <div className="space-y-2">
