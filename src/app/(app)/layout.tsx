@@ -10,11 +10,13 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabase
+  const { data: profileData } = await supabase
     .from('profiles')
     .select('role')
     .eq('id', user.id)
     .single()
+
+  const profile = profileData as { role: import('@/types/database').UserRole } | null
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">

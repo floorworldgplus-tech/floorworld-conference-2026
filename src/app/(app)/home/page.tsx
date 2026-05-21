@@ -26,11 +26,12 @@ export default async function HomePage() {
   } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabase
+  const { data: profileData } = await supabase
     .from('profiles')
     .select('*')
     .eq('id', user.id)
     .single()
+  const profile = profileData as import('@/types/database').Profile | null
 
   const now = new Date().toISOString()
 

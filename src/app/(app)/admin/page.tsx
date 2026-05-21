@@ -10,12 +10,13 @@ export default async function AdminPage() {
   } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabase
+  const { data: profileData } = await supabase
     .from('profiles')
     .select('role')
     .eq('id', user.id)
     .single()
 
+  const profile = profileData as { role: string } | null
   if (!profile || !['admin', 'nso_staff'].includes(profile.role)) {
     redirect('/home')
   }
