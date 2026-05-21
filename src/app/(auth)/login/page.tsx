@@ -123,8 +123,8 @@ export default function LoginPage() {
         <p className="mt-6 text-xs text-gray-400 text-center max-w-xs leading-relaxed">
           Your login details were sent by the event team.{' '}
           Need help?{' '}
-          <a href="mailto:events@floorworld.com.au" className="text-brand-blue">
-            events@floorworld.com.au
+          <a href="mailto:operations@floorworld.com.au" className="text-brand-blue">
+            operations@floorworld.com.au
           </a>
         </p>
       </div>

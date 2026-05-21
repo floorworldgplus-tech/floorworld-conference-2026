@@ -81,32 +81,30 @@ export default async function HomePage() {
         <BrandStrip height={8} />
 
         <div className="px-5 pt-5 pb-6">
-          {/* Top row: tagline left, logo right */}
-          <div className="flex items-start justify-between gap-3 mb-4">
-            <div>
-              {/* GROWING / STRONGER / TOGETHER — exact brand colours */}
-              <div className="text-[2rem] font-black leading-[1.0] tracking-tight">
-                <span className="block text-brand-blue">GROWING</span>
-                <span className="block text-brand-yellow">STRONGER</span>
-                <span className="block text-brand-green">TOGETHER</span>
-              </div>
-              <div className="mt-2.5 space-y-0.5">
-                <p className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">
-                  floorworld · Conference 2026
-                </p>
-                <p className="text-[11px] text-gray-400 font-medium">
-                  Kuala Lumpur · Aug 16–21, 2026
-                </p>
-              </div>
+          {/* Top row: text left, logo right */}
+          <div className="flex items-center justify-between gap-4 mb-4">
+            <div className="flex-1 min-w-0">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
+                Floorworld
+              </p>
+              <p className="text-[20px] font-black text-gray-900 leading-tight">
+                Conference 2026
+              </p>
+              <p className="text-[13px] text-gray-500 font-medium mt-1">
+                Kuala Lumpur
+              </p>
+              <p className="text-[12px] text-gray-400 mt-0.5">
+                16 – 21 August 2026
+              </p>
             </div>
 
-            {/* Conference logo — right side */}
+            {/* Conference logo — right side, 2× size */}
             <div className="flex-shrink-0">
               <Image
                 src="/conference-logo.png"
                 alt="Conference 2026"
-                width={88}
-                height={88}
+                width={176}
+                height={176}
                 className="rounded-2xl"
                 priority
               />
