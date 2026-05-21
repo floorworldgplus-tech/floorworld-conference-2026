@@ -44,7 +44,7 @@ export default async function DelegatesPage() {
               <div className="w-10 h-10 rounded-full bg-brand-blue/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
                 {p.photo_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={p.photo_url} alt={p.full_name} className="w-full h-full object-cover" />
+                  <img src={p.photo_url} alt={p.full_name ?? ''} className="w-full h-full object-cover" />
                 ) : (
                   <User size={20} className="text-brand-blue" />
                 )}
