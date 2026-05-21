@@ -8,24 +8,25 @@ import {
 import type { Session } from '@/types/database'
 
 const TYPE_CONFIG: Record<string, { label: string; colour: string }> = {
-  keynote:   { label: 'Conference',        colour: 'bg-brand-blue text-white'    },
-  breakout:  { label: 'Workshop',          colour: 'bg-brand-green text-white'   },
-  workshop:  { label: 'Workshop',          colour: 'bg-brand-green text-white'   },
-  social:    { label: 'Networking',        colour: 'bg-brand-red text-white'     },
-  meal:      { label: 'Dinner',            colour: 'bg-orange-500 text-white'    },
-  transfer:  { label: 'Transfer',          colour: 'bg-gray-400 text-white'      },
-  excursion: { label: 'Tour',              colour: 'bg-purple-500 text-white'    },
-  free_time: { label: 'Optional Activity', colour: 'bg-gray-200 text-gray-600'  },
+  keynote:   { label: 'Conference',        colour: 'bg-brand-blue text-white'       },
+  breakout:  { label: 'Supplier Expo',     colour: 'bg-brand-yellow text-gray-900'  },
+  workshop:  { label: 'Workshop',          colour: 'bg-brand-green text-white'      },
+  social:    { label: 'Networking',        colour: 'bg-purple-500 text-white'       },
+  meal:      { label: 'Dining',            colour: 'bg-orange-500 text-white'       },
+  transfer:  { label: 'Travel',            colour: 'bg-gray-400 text-white'         },
+  excursion: { label: 'Tour',              colour: 'bg-brand-red text-white'        },
+  free_time: { label: 'Optional Activity', colour: 'bg-gray-200 text-gray-600'     },
 }
 
 // Known KL venue links — falls back to a Google Maps search
 const VENUE_LINKS: Record<string, { maps: string; website?: string }> = {
-  'W Hotel':         { maps: 'https://maps.google.com/?q=W+Hotel+Kuala+Lumpur', website: 'https://www.marriott.com/hotels/travel/kulwh-w-kuala-lumpur/' },
-  'Wet Deck':        { maps: 'https://maps.google.com/?q=Wet+Deck+W+Hotel+Kuala+Lumpur' },
-  'Tamarind Springs':{ maps: 'https://maps.google.com/?q=Tamarind+Springs+Kuala+Lumpur', website: 'https://www.tamarindrestaurants.com/' },
-  'Petronas':        { maps: 'https://maps.google.com/?q=Petronas+Twin+Towers+Kuala+Lumpur', website: 'https://www.petronastwintowers.com.my/' },
-  'Bijan':           { maps: 'https://maps.google.com/?q=Bijan+Restaurant+Kuala+Lumpur', website: 'https://bijanrestaurant.com/' },
-  'Batu Caves':      { maps: 'https://maps.google.com/?q=Batu+Caves+Malaysia', website: 'https://batucaves.com/' },
+  'W Hotel':                  { maps: 'https://maps.google.com/?q=W+Hotel+Kuala+Lumpur', website: 'https://www.marriott.com/hotels/travel/kulwh-w-kuala-lumpur/' },
+  'Wet Deck':                  { maps: 'https://maps.google.com/?q=Wet+Deck+W+Hotel+Kuala+Lumpur' },
+  'Tamarind Springs':          { maps: 'https://maps.google.com/?q=Tamarind+Springs+Kuala+Lumpur', website: 'https://www.tamarindrestaurants.com/' },
+  'Petronas':                  { maps: 'https://maps.google.com/?q=Petronas+Twin+Towers+Kuala+Lumpur', website: 'https://www.petronastwintowers.com.my/' },
+  'Bijan':                     { maps: 'https://maps.google.com/?q=Bijan+Restaurant+Kuala+Lumpur', website: 'https://bijanrestaurant.com/' },
+  'Batu Caves':                { maps: 'https://maps.google.com/?q=Batu+Caves+Malaysia', website: 'https://batucaves.com/' },
+  'Royal Selangor':            { maps: 'https://maps.google.com/?q=Royal+Selangor+Visitor+Centre+Kuala+Lumpur', website: 'https://www.royalselangor.com/visitor-centre/' },
 }
 
 function getVenueLink(location: string): { maps: string; website?: string } | null {

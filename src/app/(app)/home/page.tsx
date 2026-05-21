@@ -7,7 +7,7 @@ import {
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import BrandStrip from '@/components/layout/BrandStrip'
-import { formatTime } from '@/lib/utils'
+import { formatTime, formatShortDate } from '@/lib/utils'
 import type { Session, Announcement } from '@/types/database'
 
 const SESSION_TYPE_COLOUR: Record<string, string> = {
@@ -36,14 +36,23 @@ export default async function HomePage() {
   const profile = profileData as import('@/types/database').Profile | null
 
   const now = new Date().toISOString()
+  const nowDate = new Date(now)
+
+  // Conference phase constants (all UTC; KL = UTC+8)
+  const CONF_START = new Date('2026-08-15T16:00:00Z') // = Sun 16 Aug 00:00 KL (delegate arrival)
+  const CONF_END   = new Date('2026-08-21T14:00:00Z') // = Fri 21 Aug 22:00 KL (departures end)
+
+  const isPreConference    = nowDate < CONF_START
+  const isPostConference   = nowDate >= CONF_END
+  const isDuringConference = !isPreConference && !isPostConference
+
+  const daysUntil = Math.ceil((CONF_START.getTime() - nowDate.getTime()) / 86400000)
 
   const [
-    { data: upcomingSessions },
     { data: announcements },
     { count: stampCount },
     { count: supplierCount },
   ] = await Promise.all([
-    supabase.from('sessions').select('*').gte('end_time', now).order('start_time').limit(3),
     supabase
       .from('announcements')
       .select('*')
@@ -54,6 +63,29 @@ export default async function HomePage() {
     supabase.from('passport_stamps').select('*', { count: 'exact', head: true }).eq('user_id', user.id),
     supabase.from('suppliers').select('*', { count: 'exact', head: true }).eq('is_active', true),
   ])
+
+  // Phase-aware session query
+  let upcomingSessions: Session[] = []
+  if (isPreConference) {
+    // Show delegate-facing sessions from arrival day — what to look forward to
+    const { data } = await supabase
+      .from('sessions')
+      .select('*')
+      .gte('start_time', '2026-08-15T16:00:00Z')
+      .contains('visible_to', ['delegate'])
+      .order('start_time')
+      .limit(3)
+    upcomingSessions = (data ?? []) as Session[]
+  } else if (isDuringConference) {
+    // Show what's happening now + what's next
+    const { data } = await supabase
+      .from('sessions')
+      .select('*')
+      .gte('end_time', now)
+      .order('start_time')
+      .limit(3)
+    upcomingSessions = (data ?? []) as Session[]
+  }
 
   const firstName = profile?.full_name?.split(' ')[0] ?? 'there'
   const isAdmin = profile?.role === 'admin' || profile?.role === 'nso_staff'
@@ -156,26 +188,78 @@ export default async function HomePage() {
           </Link>
         )}
 
-        {/* Upcoming sessions */}
-        {upcomingSessions && upcomingSessions.length > 0 && (
+        {/* Coming Up — phase-aware */}
+        {(upcomingSessions.length > 0 || isPostConference) && (
           <section>
             <div className="flex items-center justify-between mb-2.5">
-              <h2 className="font-bold text-gray-800 text-sm">Coming Up</h2>
-              <Link href="/agenda" className="text-xs text-brand-blue font-semibold">Full agenda →</Link>
+              <h2 className="font-bold text-gray-800 text-sm">
+                {isPreConference ? 'What to Look Forward To' : isPostConference ? 'Conference Complete' : 'Coming Up'}
+              </h2>
+              {!isPostConference && (
+                <Link href="/agenda" className="text-xs text-brand-blue font-semibold">Full agenda →</Link>
+              )}
             </div>
-            <div className="space-y-2">
-              {(upcomingSessions as Session[]).map((s) => (
-                <div key={s.id} className="bg-white rounded-xl px-4 py-3.5 shadow-sm border border-gray-100 flex items-start gap-3">
-                  <div className={`mt-1 w-1 self-stretch min-h-[1.75rem] rounded-full flex-shrink-0 ${SESSION_TYPE_COLOUR[s.session_type] ?? 'bg-gray-200'}`} />
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-gray-900 text-sm leading-snug">{s.title}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">
-                      {formatTime(s.start_time)}{s.location ? ` · ${s.location}` : ''}
-                    </p>
-                  </div>
+
+            {/* Pre-conference countdown banner */}
+            {isPreConference && daysUntil > 0 && (
+              <div className="mb-3 bg-brand-blue/5 border border-brand-blue/10 rounded-2xl px-4 py-3.5 flex items-center gap-3.5">
+                <div className="text-center flex-shrink-0 w-12">
+                  <p className="text-[28px] font-black text-brand-blue leading-none">{daysUntil}</p>
+                  <p className="text-[9px] text-gray-400 uppercase tracking-widest mt-0.5">days to go</p>
                 </div>
-              ))}
-            </div>
+                <div className="w-px self-stretch bg-brand-blue/15 flex-shrink-0" />
+                <div>
+                  <p className="text-[13px] font-bold text-gray-800">Getting ready for KL</p>
+                  <p className="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
+                    Kuala Lumpur · 16 – 21 August 2026
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Post-conference card */}
+            {isPostConference && (
+              <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 text-center">
+                <p className="font-bold text-gray-900 text-sm">Thank You for Being Part of It</p>
+                <p className="text-xs text-gray-500 mt-1.5 leading-relaxed max-w-[220px] mx-auto">
+                  Growing Stronger Together — Kuala Lumpur 2026
+                </p>
+              </div>
+            )}
+
+            {/* Session cards */}
+            {upcomingSessions.length > 0 && (
+              <div className="space-y-2">
+                {upcomingSessions.map((s) => {
+                  const isNow = isDuringConference &&
+                    nowDate >= new Date(s.start_time) &&
+                    nowDate <= new Date(s.end_time)
+                  return (
+                    <Link href="/agenda" key={s.id}>
+                      <div className={`bg-white rounded-xl px-4 py-3.5 shadow-sm border flex items-start gap-3 active:scale-[0.98] transition-transform ${isNow ? 'border-brand-blue' : 'border-gray-100'}`}>
+                        <div className={`mt-1 w-1 self-stretch min-h-[1.75rem] rounded-full flex-shrink-0 ${SESSION_TYPE_COLOUR[s.session_type] ?? 'bg-gray-200'}`} />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            {isNow && (
+                              <span className="text-[9px] font-bold bg-brand-blue text-white px-1.5 py-0.5 rounded uppercase tracking-wide flex-shrink-0">
+                                Now
+                              </span>
+                            )}
+                            <p className="font-semibold text-gray-900 text-sm leading-snug">{s.title}</p>
+                          </div>
+                          <p className="text-xs text-gray-400 mt-0.5">
+                            {isPreConference
+                              ? `${formatShortDate(s.start_time)} · ${formatTime(s.start_time)}`
+                              : formatTime(s.start_time)}
+                            {s.location ? ` · ${s.location}` : ''}
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  )
+                })}
+              </div>
+            )}
           </section>
         )}
 
