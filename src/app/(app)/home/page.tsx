@@ -6,6 +6,7 @@ import {
   HelpCircle, MessageSquare, LayoutDashboard, Megaphone,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
+import BrandStrip from '@/components/layout/BrandStrip'
 import { formatTime } from '@/lib/utils'
 import type { Session, Announcement } from '@/types/database'
 
@@ -42,12 +43,7 @@ export default async function HomePage() {
     { count: stampCount },
     { count: supplierCount },
   ] = await Promise.all([
-    supabase
-      .from('sessions')
-      .select('*')
-      .gte('end_time', now)
-      .order('start_time')
-      .limit(3),
+    supabase.from('sessions').select('*').gte('end_time', now).order('start_time').limit(3),
     supabase
       .from('announcements')
       .select('*')
@@ -55,14 +51,8 @@ export default async function HomePage() {
       .order('is_pinned', { ascending: false })
       .order('published_at', { ascending: false })
       .limit(3),
-    supabase
-      .from('passport_stamps')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', user.id),
-    supabase
-      .from('suppliers')
-      .select('*', { count: 'exact', head: true })
-      .eq('is_active', true),
+    supabase.from('passport_stamps').select('*', { count: 'exact', head: true }).eq('user_id', user.id),
+    supabase.from('suppliers').select('*', { count: 'exact', head: true }).eq('is_active', true),
   ])
 
   const firstName = profile?.full_name?.split(' ')[0] ?? 'there'
@@ -86,46 +76,67 @@ export default async function HomePage() {
     <div className="bg-gray-50 min-h-screen">
 
       {/* ── Hero header ── */}
-      <div className="bg-white border-b border-gray-100">
-        {/* Thin brand bar */}
-        <div className="h-0.5 bg-gradient-to-r from-brand-blue via-brand-green to-brand-yellow" />
+      <div className="bg-white">
+        {/* Diagonal brand strip */}
+        <BrandStrip height={8} />
 
         <div className="px-5 pt-5 pb-6">
-          <div className="flex items-center gap-4">
-            <Image
-              src="/conference-logo.png"
-              alt="Floorworld Conference 2026"
-              width={58}
-              height={58}
-              className="rounded-2xl flex-shrink-0 border border-gray-100"
-              priority
-            />
-            <div className="min-w-0">
-              <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest leading-none mb-1">
-                KL · Aug 16–21, 2026
-              </p>
-              <h1 className="text-[1.35rem] font-bold text-gray-900 leading-tight">
-                Hey, {firstName} 👋
-              </h1>
-              {profile?.company && (
-                <p className="text-sm text-gray-500 mt-0.5 truncate">{profile.company}</p>
-              )}
+          {/* Top row: tagline left, logo right */}
+          <div className="flex items-start justify-between gap-3 mb-4">
+            <div>
+              {/* GROWING / STRONGER / TOGETHER — exact brand colours */}
+              <div className="text-[2rem] font-black leading-[1.0] tracking-tight">
+                <span className="block text-brand-blue">GROWING</span>
+                <span className="block text-brand-yellow">STRONGER</span>
+                <span className="block text-brand-green">TOGETHER</span>
+              </div>
+              <div className="mt-2.5 space-y-0.5">
+                <p className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">
+                  floorworld · Conference 2026
+                </p>
+                <p className="text-[11px] text-gray-400 font-medium">
+                  Kuala Lumpur · Aug 16–21, 2026
+                </p>
+              </div>
             </div>
+
+            {/* Conference logo — right side */}
+            <div className="flex-shrink-0">
+              <Image
+                src="/conference-logo.png"
+                alt="Conference 2026"
+                width={88}
+                height={88}
+                className="rounded-2xl"
+                priority
+              />
+            </div>
+          </div>
+
+          {/* Greeting divider */}
+          <div className="border-t border-gray-100 pt-3.5">
+            <p className="text-xl font-bold text-gray-900">
+              Hey, {firstName} 👋
+            </p>
+            {profile?.company && (
+              <p className="text-sm text-gray-500 mt-0.5">{profile.company}</p>
+            )}
           </div>
         </div>
       </div>
 
+      {/* ── Content ── */}
       <div className="px-4 pt-4 space-y-5 pb-6">
 
-        {/* ── Passport progress — delegates only ── */}
+        {/* Passport progress — delegates only */}
         {isDelegate && (
           <Link href="/passport">
-            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center gap-4 active:scale-[0.98] transition-transform">
+            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center gap-4 active:scale-[0.98] transition-transform mt-0">
               <div className="w-12 h-12 bg-brand-blue/10 rounded-xl flex items-center justify-center flex-shrink-0">
                 <Stamp size={22} className="text-brand-blue" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-gray-900 text-sm">Expo Passport</p>
+                <p className="font-bold text-gray-900 text-sm">Expo Passport</p>
                 <p className="text-xs text-gray-400 mt-0.5">
                   {stampCount ?? 0} of {supplierCount ?? 0} booths visited
                 </p>
@@ -147,31 +158,21 @@ export default async function HomePage() {
           </Link>
         )}
 
-        {/* ── Upcoming sessions ── */}
+        {/* Upcoming sessions */}
         {upcomingSessions && upcomingSessions.length > 0 && (
           <section>
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="font-bold text-gray-800 text-sm tracking-tight">Coming Up</h2>
-              <Link href="/agenda" className="text-xs text-brand-blue font-semibold">
-                Full agenda →
-              </Link>
+            <div className="flex items-center justify-between mb-2.5">
+              <h2 className="font-bold text-gray-800 text-sm">Coming Up</h2>
+              <Link href="/agenda" className="text-xs text-brand-blue font-semibold">Full agenda →</Link>
             </div>
             <div className="space-y-2">
               {(upcomingSessions as Session[]).map((s) => (
-                <div
-                  key={s.id}
-                  className="bg-white rounded-xl px-4 py-3.5 shadow-sm border border-gray-100 flex items-start gap-3"
-                >
-                  <div
-                    className={`mt-1 w-1 self-stretch min-h-[1.75rem] rounded-full flex-shrink-0 ${
-                      SESSION_TYPE_COLOUR[s.session_type] ?? 'bg-gray-200'
-                    }`}
-                  />
+                <div key={s.id} className="bg-white rounded-xl px-4 py-3.5 shadow-sm border border-gray-100 flex items-start gap-3">
+                  <div className={`mt-1 w-1 self-stretch min-h-[1.75rem] rounded-full flex-shrink-0 ${SESSION_TYPE_COLOUR[s.session_type] ?? 'bg-gray-200'}`} />
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-gray-900 text-sm leading-snug">{s.title}</p>
                     <p className="text-xs text-gray-400 mt-0.5">
-                      {formatTime(s.start_time)}
-                      {s.location ? ` · ${s.location}` : ''}
+                      {formatTime(s.start_time)}{s.location ? ` · ${s.location}` : ''}
                     </p>
                   </div>
                 </div>
@@ -180,22 +181,18 @@ export default async function HomePage() {
           </section>
         )}
 
-        {/* ── Announcements ── */}
+        {/* Announcements */}
         {announcements && announcements.length > 0 && (
           <section>
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="font-bold text-gray-800 text-sm tracking-tight">Announcements</h2>
-              <Link href="/announcements" className="text-xs text-brand-blue font-semibold">
-                See all →
-              </Link>
+            <div className="flex items-center justify-between mb-2.5">
+              <h2 className="font-bold text-gray-800 text-sm">Announcements</h2>
+              <Link href="/announcements" className="text-xs text-brand-blue font-semibold">See all →</Link>
             </div>
             <div className="space-y-2">
               {(announcements as Announcement[]).map((a) => (
                 <div
                   key={a.id}
-                  className={`bg-white rounded-xl px-4 py-3.5 shadow-sm border ${
-                    a.is_pinned ? 'border-brand-yellow/40' : 'border-gray-100'
-                  }`}
+                  className={`bg-white rounded-xl px-4 py-3.5 shadow-sm border ${a.is_pinned ? 'border-brand-yellow/50' : 'border-gray-100'}`}
                 >
                   <div className="flex items-start gap-2">
                     {a.is_pinned && (
@@ -214,9 +211,9 @@ export default async function HomePage() {
           </section>
         )}
 
-        {/* ── Quick access ── */}
+        {/* Quick access */}
         <section>
-          <h2 className="font-bold text-gray-800 text-sm tracking-tight mb-3">Quick Access</h2>
+          <h2 className="font-bold text-gray-800 text-sm mb-2.5">Quick Access</h2>
           <div className="grid grid-cols-4 gap-1">
             {quickLinks.map(({ href, icon: Icon, label, bg, fg }) => (
               <Link key={href} href={href}>
@@ -224,9 +221,7 @@ export default async function HomePage() {
                   <div className={`w-12 h-12 rounded-2xl ${bg} flex items-center justify-center shadow-sm`}>
                     <Icon size={22} className={fg} />
                   </div>
-                  <span className="text-[10px] text-gray-500 font-medium text-center leading-tight">
-                    {label}
-                  </span>
+                  <span className="text-[10px] text-gray-500 font-medium text-center leading-tight">{label}</span>
                 </div>
               </Link>
             ))}
