@@ -18,7 +18,7 @@ export default async function PassportPage() {
 
   return (
     <div>
-      <TopBar title="Expo Passport" />
+      <TopBar title="Supplier Expo Passport" />
       <PassportClient
         userId={user.id}
         suppliers={(suppliers ?? []) as Supplier[]}
