@@ -31,9 +31,11 @@ export async function middleware(request: NextRequest) {
 
   const path = request.nextUrl.pathname
 
-  if (!user && path !== '/login') {
-    return NextResponse.redirect(new URL('/login', request.url))
-  }
+  // AUTH DISABLED — open access for preview/testing
+  // Uncomment the lines below to re-enable login requirement:
+  // if (!user && path !== '/login') {
+  //   return NextResponse.redirect(new URL('/login', request.url))
+  // }
 
   if (user && path === '/login') {
     return NextResponse.redirect(new URL('/home', request.url))
