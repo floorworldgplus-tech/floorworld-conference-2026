@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import TopBar from '@/components/layout/TopBar'
 import {
   Building2, Plane, BookOpen, MessageSquare, HelpCircle,
-  LayoutDashboard, Megaphone, LogOut, ChevronRight,
+  LayoutDashboard, Megaphone, LogOut, ChevronRight, Bell,
 } from 'lucide-react'
 import { roleLabel } from '@/lib/utils'
 import SignOutButton from './SignOutButton'
@@ -13,6 +13,7 @@ const sections = [
   {
     title: 'Conference',
     items: [
+      { href: '/notifications',  icon: Bell,           label: 'Notifications'    },
       { href: '/announcements', icon: Megaphone,      label: 'Announcements'    },
       { href: '/suppliers',     icon: Building2,      label: 'Supplier Directory'},
       { href: '/resources',     icon: BookOpen,       label: 'Resource Library'  },

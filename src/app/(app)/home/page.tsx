@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import {
   Calendar, Stamp, Users, Building2, Plane, BookOpen,
-  HelpCircle, MessageSquare, LayoutDashboard, Megaphone,
+  HelpCircle, MessageSquare, LayoutDashboard, Megaphone, Bell,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import BrandStrip from '@/components/layout/BrandStrip'
@@ -113,7 +113,7 @@ export default async function HomePage() {
         <BrandStrip height={8} />
 
         <div className="px-5 pt-5 pb-6">
-          {/* Top row: text left, logo right */}
+          {/* Top row: text left, bell + logo right */}
           <div className="flex items-center justify-between gap-4 mb-4">
             <div className="flex-1 min-w-0">
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
@@ -130,13 +130,16 @@ export default async function HomePage() {
               </p>
             </div>
 
-            {/* Conference logo — right side, 2× size */}
-            <div className="flex-shrink-0">
+            {/* Bell + logo — right side */}
+            <div className="flex-shrink-0 flex flex-col items-end gap-2">
+              <Link href="/notifications" className="w-9 h-9 bg-gray-100 rounded-xl flex items-center justify-center active:scale-95 transition-transform">
+                <Bell size={18} className="text-gray-500" />
+              </Link>
               <Image
                 src="/conference-logo.png"
                 alt="Conference 2026"
-                width={176}
-                height={176}
+                width={160}
+                height={160}
                 className="rounded-2xl"
                 priority
               />

@@ -4,18 +4,28 @@ import { useState } from 'react'
 import { Send, Loader2, CheckCircle } from 'lucide-react'
 
 type Audience = 'all' | 'delegate' | 'supplier' | 'nso_staff'
+type Destination = '/home' | '/agenda' | '/announcements' | '/passport' | '/notifications'
 
 const AUDIENCES: { value: Audience; label: string; description: string }[] = [
-  { value: 'all',       label: 'Everyone',    description: 'All delegates, suppliers & staff' },
-  { value: 'delegate',  label: 'Delegates',   description: 'Registered delegates only' },
-  { value: 'supplier',  label: 'Suppliers',   description: 'Expo suppliers only' },
-  { value: 'nso_staff', label: 'Staff',       description: 'NSO staff only' },
+  { value: 'all',       label: 'Everyone',  description: 'All delegates, suppliers & staff' },
+  { value: 'delegate',  label: 'Delegates', description: 'Registered delegates only' },
+  { value: 'supplier',  label: 'Suppliers', description: 'Expo suppliers only' },
+  { value: 'nso_staff', label: 'Staff',     description: 'NSO staff only' },
+]
+
+const DESTINATIONS: { value: Destination; label: string }[] = [
+  { value: '/home',          label: '🏠 Home' },
+  { value: '/agenda',        label: '📅 Agenda' },
+  { value: '/announcements', label: '📢 Announcements' },
+  { value: '/passport',      label: '🎟️ Expo Passport' },
+  { value: '/notifications', label: '🔔 Notifications' },
 ]
 
 export default function SendNotification() {
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
   const [audience, setAudience] = useState<Audience>('all')
+  const [destination, setDestination] = useState<Destination>('/home')
   const [sending, setSending] = useState(false)
   const [result, setResult] = useState<{ sent: number; failed: number } | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -33,7 +43,7 @@ export default function SendNotification() {
       const res = await fetch('/api/push-send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: title.trim(), body: body.trim(), audience }),
+        body: JSON.stringify({ title: title.trim(), body: body.trim(), audience, destination }),
       })
       const data = await res.json()
       if (data.ok) {
@@ -58,7 +68,8 @@ export default function SendNotification() {
       </div>
 
       <div className="px-4 py-4 space-y-4">
-        {/* Audience selector */}
+
+        {/* Audience */}
         <div>
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Send to</p>
           <div className="grid grid-cols-2 gap-2">
@@ -111,6 +122,27 @@ export default function SendNotification() {
             className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm bg-gray-50 resize-none focus:outline-none focus:ring-2 focus:ring-brand-blue"
           />
           <p className="text-[10px] text-gray-400 text-right mt-1">{body.length}/150</p>
+        </div>
+
+        {/* Destination */}
+        <div>
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Tapping opens</p>
+          <div className="flex flex-wrap gap-2">
+            {DESTINATIONS.map((d) => (
+              <button
+                key={d.value}
+                type="button"
+                onClick={() => setDestination(d.value)}
+                className={`px-3 py-2 rounded-xl border text-xs font-semibold transition-colors ${
+                  destination === d.value
+                    ? 'bg-brand-blue text-white border-brand-blue'
+                    : 'bg-gray-50 text-gray-700 border-gray-200'
+                }`}
+              >
+                {d.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {error && (

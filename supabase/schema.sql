@@ -385,3 +385,23 @@ CREATE POLICY "Admins read all subscriptions" ON push_subscriptions
   FOR SELECT USING (
     EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
   );
+
+-- Notification centre log
+CREATE TABLE IF NOT EXISTS push_notifications_log (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title       TEXT NOT NULL,
+  body        TEXT NOT NULL,
+  audience    TEXT NOT NULL DEFAULT 'all',
+  destination TEXT NOT NULL DEFAULT '/home',
+  sent_count  INT NOT NULL DEFAULT 0,
+  sent_by     UUID REFERENCES auth.users ON DELETE SET NULL,
+  sent_at     TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE push_notifications_log ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "All logged-in users can read notification log" ON push_notifications_log
+  FOR SELECT USING (auth.uid() IS NOT NULL);
+CREATE POLICY "Admins can insert notification log" ON push_notifications_log
+  FOR INSERT WITH CHECK (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+  );
