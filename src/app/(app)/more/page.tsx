@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import TopBar from '@/components/layout/TopBar'
 import {
   Building2, Plane, BookOpen, MessageSquare, HelpCircle,
-  LayoutDashboard, LogOut, ChevronRight, Bell,
+  LayoutDashboard, LogOut, ChevronRight, Bell, Upload,
 } from 'lucide-react'
 import { roleLabel } from '@/lib/utils'
 import SignOutButton from './SignOutButton'
@@ -21,7 +21,7 @@ const sections = [
   {
     title: 'My Details',
     items: [
-      { href: '/travel',   icon: Plane,         label: 'Travel & Logistics'},
+      { href: '/itinerary', icon: Plane,         label: 'My Itinerary'     },
       { href: '/feedback', icon: MessageSquare,  label: 'Submit Feedback'   },
       { href: '/help',     icon: HelpCircle,    label: 'Help Desk'         },
     ],
@@ -89,9 +89,16 @@ export default async function MorePage() {
             <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Admin</h2>
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
               <Link href="/admin">
-                <div className="flex items-center gap-3 px-4 py-3.5">
+                <div className="flex items-center gap-3 px-4 py-3.5 border-b border-gray-50">
                   <LayoutDashboard size={20} className="text-brand-blue flex-shrink-0" />
                   <span className="flex-1 text-sm font-medium text-gray-800">Admin Dashboard</span>
+                  <ChevronRight size={16} className="text-gray-300" />
+                </div>
+              </Link>
+              <Link href="/admin/upload-itineraries">
+                <div className="flex items-center gap-3 px-4 py-3.5">
+                  <Upload size={20} className="text-brand-blue flex-shrink-0" />
+                  <span className="flex-1 text-sm font-medium text-gray-800">Upload Itineraries</span>
                   <ChevronRight size={16} className="text-gray-300" />
                 </div>
               </Link>

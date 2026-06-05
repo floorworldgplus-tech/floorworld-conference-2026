@@ -405,3 +405,39 @@ CREATE POLICY "Admins can insert notification log" ON push_notifications_log
   FOR INSERT WITH CHECK (
     EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
   );
+
+-- Personal itineraries (one per delegate, matched by email)
+CREATE TABLE IF NOT EXISTS itineraries (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id             UUID REFERENCES auth.users ON DELETE SET NULL,
+  email               TEXT NOT NULL UNIQUE,
+  preferred_name      TEXT,
+  full_name           TEXT,
+  organisation        TEXT,
+  registration_type   TEXT,
+  dietary_requirements TEXT,
+  tshirt_size         TEXT,
+  tshirt_quantity     TEXT,
+  hotel               TEXT,
+  room_type           TEXT,
+  checkin_date        TEXT,
+  checkout_date       TEXT,
+  sharing_with        TEXT,
+  flight_preference   TEXT,
+  outbound_flight     TEXT,
+  return_flight       TEXT,
+  transfer_arrival    TEXT,
+  transfer_departure  TEXT,
+  activities          JSONB,
+  program             JSONB,
+  updated_at          TIMESTAMPTZ DEFAULT NOW(),
+  created_at          TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE itineraries ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users see own itinerary" ON itineraries
+  FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Admins manage all itineraries" ON itineraries
+  FOR ALL USING (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+  );
