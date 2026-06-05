@@ -3,12 +3,12 @@ import Link from 'next/link'
 import Image from 'next/image'
 import {
   Calendar, Stamp, Users, Building2, Plane, BookOpen,
-  HelpCircle, MessageSquare, LayoutDashboard, Megaphone, Bell,
+  HelpCircle, MessageSquare, LayoutDashboard, Bell,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import BrandStrip from '@/components/layout/BrandStrip'
 import { formatTime, formatShortDate } from '@/lib/utils'
-import type { Session, Announcement } from '@/types/database'
+import type { Session } from '@/types/database'
 
 const SESSION_TYPE_COLOUR: Record<string, string> = {
   keynote:   'bg-brand-blue',
@@ -49,17 +49,9 @@ export default async function HomePage() {
   const daysUntil = Math.ceil((CONF_START.getTime() - nowDate.getTime()) / 86400000)
 
   const [
-    { data: announcements },
     { count: stampCount },
     { count: supplierCount },
   ] = await Promise.all([
-    supabase
-      .from('announcements')
-      .select('*')
-      .or('expires_at.is.null,expires_at.gt.' + now)
-      .order('is_pinned', { ascending: false })
-      .order('published_at', { ascending: false })
-      .limit(3),
     supabase.from('passport_stamps').select('*', { count: 'exact', head: true }).eq('user_id', user.id),
     supabase.from('suppliers').select('*', { count: 'exact', head: true }).eq('is_active', true),
   ])
@@ -263,36 +255,6 @@ export default async function HomePage() {
                 })}
               </div>
             )}
-          </section>
-        )}
-
-        {/* Announcements */}
-        {announcements && announcements.length > 0 && (
-          <section>
-            <div className="flex items-center justify-between mb-2.5">
-              <h2 className="font-bold text-gray-800 text-sm">Announcements</h2>
-              <Link href="/announcements" className="text-xs text-brand-blue font-semibold">See all →</Link>
-            </div>
-            <div className="space-y-2">
-              {(announcements as Announcement[]).map((a) => (
-                <div
-                  key={a.id}
-                  className={`bg-white rounded-xl px-4 py-3.5 shadow-sm border ${a.is_pinned ? 'border-brand-yellow/50' : 'border-gray-100'}`}
-                >
-                  <div className="flex items-start gap-2">
-                    {a.is_pinned && (
-                      <span className="mt-0.5 text-[9px] bg-brand-yellow text-white font-bold px-1.5 py-0.5 rounded-md flex-shrink-0 uppercase tracking-wide">
-                        Pinned
-                      </span>
-                    )}
-                    <div className="min-w-0">
-                      <p className="font-semibold text-gray-900 text-sm leading-snug">{a.title}</p>
-                      <p className="text-xs text-gray-500 mt-0.5 line-clamp-2 leading-relaxed">{a.body}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
           </section>
         )}
 
