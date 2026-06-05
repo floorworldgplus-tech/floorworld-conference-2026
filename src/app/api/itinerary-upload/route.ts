@@ -2,71 +2,79 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import * as XLSX from 'xlsx'
 
-function cellVal(row: any[], col: number): string {
-  const v = row?.[col]
+function cellStr(v: any): string {
   if (v === null || v === undefined) return ''
   return String(v).trim()
 }
 
+// Find the row index where col0 contains the given label
+function findRow(rows: any[][], label: string): number {
+  for (let i = 0; i < rows.length; i++) {
+    if (cellStr(rows[i]?.[0]).includes(label)) return i
+  }
+  return -1
+}
+
+// Get value (col1) at the row where col0 contains label
+function getVal(rows: any[][], label: string): string {
+  const i = findRow(rows, label)
+  return i >= 0 ? cellStr(rows[i]?.[1]) : ''
+}
+
 function parseSheet(rows: any[][]): Record<string, any> | null {
-  // rows[7][1] = Email Address
-  const email = cellVal(rows[7], 1)
+  const email = getVal(rows, 'Email Address')
   if (!email || !email.includes('@')) return null
 
-  // Personal
-  const preferred_name    = cellVal(rows[3], 1)
-  const full_name         = cellVal(rows[4], 1)
-  const organisation      = cellVal(rows[5], 1)
-  const registration_type = cellVal(rows[6], 1)
-  const dietary           = cellVal(rows[8], 1)
-  const tshirt_size       = cellVal(rows[9], 1)
-  const tshirt_quantity   = cellVal(rows[10], 1)
+  // Optional activities section
+  const actStart = findRow(rows, 'OPTIONAL ACTIVITIES')
+  const activities: { name: string; status: string }[] = []
+  if (actStart >= 0) {
+    for (let i = actStart + 1; i < rows.length; i++) {
+      const col0 = cellStr(rows[i]?.[0])
+      const col1 = cellStr(rows[i]?.[1])
+      if (!col0) break // blank row = end of section
+      if (col0.includes('CONFERENCE')) break
+      activities.push({ name: col0.replace(/\n/g, ' '), status: col1 })
+    }
+  }
 
-  // Accommodation
-  const hotel         = cellVal(rows[13], 1)
-  const room_type     = cellVal(rows[14], 1)
-  const checkin_date  = cellVal(rows[15], 1)
-  const checkout_date = cellVal(rows[16], 1)
-  const sharing_with  = cellVal(rows[17], 1)
-
-  // Flights
-  const flight_preference    = cellVal(rows[20], 1)
-  const outbound_flight      = cellVal(rows[21], 1)
-  const return_flight        = cellVal(rows[22], 1)
-  const transfer_arrival     = cellVal(rows[23], 1)
-  const transfer_departure   = cellVal(rows[24], 1)
-
-  // Optional activities (rows 27–31)
-  const activityRows = [27, 28, 29, 30, 31]
-  const activities = activityRows.map(i => ({
-    name: cellVal(rows[i], 0).replace(/\n/g, ' '),
-    status: cellVal(rows[i], 1),
-  })).filter(a => a.name)
-
-  // Conference program (rows 35 onwards, row 34 is header)
-  const program: any[] = []
-  for (let i = 35; i < rows.length; i++) {
-    const row = rows[i]
-    if (!row) continue
-    const col0 = cellVal(row, 0)
-    const col1 = cellVal(row, 1)
-    const col2 = cellVal(row, 2)
-    const col3 = cellVal(row, 3)
-    if (!col0 && !col1 && !col2) continue
-    if (col0.startsWith('All times')) continue // footer
-    // Day header rows have content in col0 but empty col1
-    const isHeader = col0 && !col1 && !col2
-    program.push({ date: col0, time: col1, session: col2, venue: col3, isHeader })
+  // Conference program section
+  const progStart = findRow(rows, 'CONFERENCE PROGRAM')
+  const program: { date: string; time: string; session: string; venue: string; isHeader: boolean }[] = []
+  if (progStart >= 0) {
+    for (let i = progStart + 2; i < rows.length; i++) { // +2 to skip header row
+      const row = rows[i]
+      if (!row) continue
+      const col0 = cellStr(row[0])
+      const col1 = cellStr(row[1])
+      const col2 = cellStr(row[2])
+      const col3 = cellStr(row[3])
+      if (!col0 && !col1 && !col2) continue
+      if (col0.startsWith('All times')) continue
+      const isHeader = !!col0 && !col1 && !col2
+      program.push({ date: col0, time: col1, session: col2, venue: col3, isHeader })
+    }
   }
 
   return {
-    email: email.toLowerCase(),
-    preferred_name, full_name, organisation, registration_type,
-    dietary_requirements: dietary,
-    tshirt_size, tshirt_quantity,
-    hotel, room_type, checkin_date, checkout_date, sharing_with,
-    flight_preference, outbound_flight, return_flight,
-    transfer_arrival, transfer_departure,
+    email:               email.toLowerCase(),
+    preferred_name:      getVal(rows, 'Preferred Name'),
+    full_name:           getVal(rows, 'Full Name'),
+    organisation:        getVal(rows, 'Organisation'),
+    registration_type:   getVal(rows, 'Registration Type'),
+    dietary_requirements: getVal(rows, 'Dietary Requirements'),
+    tshirt_size:         getVal(rows, 'T-Shirt Size'),
+    tshirt_quantity:     getVal(rows, 'T-Shirt Quantity'),
+    hotel:               getVal(rows, 'Hotel'),
+    room_type:           getVal(rows, 'Room Type'),
+    checkin_date:        getVal(rows, 'Check-In Date'),
+    checkout_date:       getVal(rows, 'Check-Out Date'),
+    sharing_with:        getVal(rows, 'Sharing With'),
+    flight_preference:   getVal(rows, 'Flight Preference'),
+    outbound_flight:     getVal(rows, 'Outbound Flight'),
+    return_flight:       getVal(rows, 'Return Flight'),
+    transfer_arrival:    getVal(rows, 'Airport Transfer (Arrival)'),
+    transfer_departure:  getVal(rows, 'Airport Transfer (Departure)'),
     activities,
     program,
   }
@@ -99,22 +107,19 @@ export async function POST(req: NextRequest) {
         const data = parseSheet(rows)
         if (!data) { skipped++; continue }
 
-        // Try to find matching user by email
+        // Match to user account by email
         const { data: matchedProfile } = await supabase
           .from('profiles')
           .select('id')
           .ilike('email', data.email)
           .single()
 
-        const upsertData = {
-          ...data,
-          user_id: matchedProfile?.id ?? null,
-          updated_at: new Date().toISOString(),
-        }
-
         const { error } = await supabase
           .from('itineraries')
-          .upsert(upsertData, { onConflict: 'email' })
+          .upsert(
+            { ...data, user_id: matchedProfile?.id ?? null, updated_at: new Date().toISOString() },
+            { onConflict: 'email' }
+          )
 
         if (error) {
           errors.push(`${sheetName}: ${error.message}`)
