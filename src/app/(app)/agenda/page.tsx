@@ -4,6 +4,8 @@ import TopBar from '@/components/layout/TopBar'
 import AgendaClient from '@/components/features/AgendaClient'
 import type { Session } from '@/types/database'
 
+export const revalidate = 300 // cache for 5 minutes
+
 type UserSessionRow = { session_id: string }
 
 export default async function AgendaPage() {

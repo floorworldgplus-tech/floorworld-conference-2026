@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server'
 import TopBar from '@/components/layout/TopBar'
 import { User } from 'lucide-react'
 import { roleLabel } from '@/lib/utils'
+
+export const revalidate = 120 // cache for 2 minutes
 import type { Profile } from '@/types/database'
 
 type DelegateRow = {

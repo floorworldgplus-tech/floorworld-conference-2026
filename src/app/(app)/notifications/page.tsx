@@ -2,6 +2,8 @@ import { createClient } from '@/lib/supabase/server'
 import TopBar from '@/components/layout/TopBar'
 import { Bell, BellOff } from 'lucide-react'
 
+export const revalidate = 30 // cache for 30 seconds
+
 type NotifRow = {
   id: string
   title: string

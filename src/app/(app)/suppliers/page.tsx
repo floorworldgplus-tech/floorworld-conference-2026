@@ -4,6 +4,8 @@ import TopBar from '@/components/layout/TopBar'
 import { Globe, Mail, Phone } from 'lucide-react'
 import type { Supplier } from '@/types/database'
 
+export const revalidate = 300 // cache for 5 minutes
+
 const TIER_COLOURS: Record<string, string> = {
   gold:     'bg-yellow-50 border-yellow-200',
   silver:   'bg-gray-50 border-gray-200',
