@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import BottomNav from '@/components/layout/BottomNav'
+import PushRegistrar from '@/components/PushRegistrar'
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient()
@@ -20,6 +21,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
+      <PushRegistrar />
       <main className="flex-1 pb-nav safe-top">{children}</main>
       <BottomNav role={profile?.role ?? 'delegate'} />
     </div>

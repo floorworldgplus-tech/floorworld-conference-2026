@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import TopBar from '@/components/layout/TopBar'
 import { Users, Building2, Stamp, HelpCircle, MessageSquare, Megaphone } from 'lucide-react'
+import SendNotification from './SendNotification'
 
 type HelpRow = { id: string; subject: string; status: string; created_at: string }
 type ProfileRow = { role: string }
@@ -111,6 +112,9 @@ export default async function AdminPage() {
             </div>
           )}
         </section>
+
+        {/* Push notifications */}
+        <SendNotification />
 
         <p className="text-xs text-gray-400 text-center pb-2">
           Full admin tools will be added in the next build phase.

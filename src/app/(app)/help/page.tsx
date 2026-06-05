@@ -37,11 +37,31 @@ export default function HelpPage() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
 
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('full_name')
+      .eq('id', user.id)
+      .single()
+
     const { error } = await supabase.from('help_requests').insert({
       user_id: user.id,
       subject: finalSubject.trim(),
       message: message.trim(),
     })
+
+    if (!error) {
+      // Fire email notification (non-blocking)
+      fetch('/api/help-notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          subject: finalSubject.trim(),
+          message: message.trim(),
+          userName: (profile as any)?.full_name || 'A delegate',
+          userEmail: user.email,
+        }),
+      }).catch(() => {}) // silently ignore if email fails
+    }
 
     setSubmitting(false)
     if (error) {

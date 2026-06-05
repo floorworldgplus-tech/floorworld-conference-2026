@@ -367,3 +367,21 @@ INSERT INTO suppliers (name, description, category, booth_number, passport_code,
   ('Karndean', 'Luxury vinyl tile and plank flooring.', 'Vinyl', 'B2', 'KD-2026-EXPO', 'silver', 40),
   ('Boral Timber', 'Sustainable hardwood and engineered timber flooring.', 'Timber & Laminate', 'C1', 'BT-2026-EXPO', 'bronze', 50),
   ('Interface', 'Commercial carpet tile solutions.', 'Commercial', 'C2', 'IF-2026-EXPO', 'bronze', 60);
+
+-- Push notification subscriptions
+CREATE TABLE IF NOT EXISTS push_subscriptions (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id     UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL UNIQUE,
+  role        TEXT NOT NULL DEFAULT 'delegate',
+  endpoint    TEXT NOT NULL,
+  subscription_json TEXT NOT NULL,
+  updated_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE push_subscriptions ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users manage own subscription" ON push_subscriptions
+  FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "Admins read all subscriptions" ON push_subscriptions
+  FOR SELECT USING (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+  );
