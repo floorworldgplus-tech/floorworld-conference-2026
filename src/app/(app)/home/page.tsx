@@ -4,6 +4,7 @@ import Image from 'next/image'
 import {
   Calendar, Stamp, Users, Building2, Plane, BookOpen,
   HelpCircle, MessageSquare, LayoutDashboard, Bell,
+  Hotel, Utensils, CheckCircle, ChevronRight,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import BrandStrip from '@/components/layout/BrandStrip'
@@ -51,10 +52,30 @@ export default async function HomePage() {
   const [
     { count: stampCount },
     { count: supplierCount },
+    { data: travelData },
   ] = await Promise.all([
     supabase.from('passport_stamps').select('*', { count: 'exact', head: true }).eq('user_id', user.id),
     supabase.from('suppliers').select('*', { count: 'exact', head: true }).eq('is_active', true),
+    supabase.from('travel_info').select('check_in, check_out, dietary_requirements, special_requirements, hotel_name, arrival_flight, departure_flight').eq('user_id', user.id).single(),
   ])
+
+  const travel = travelData as any
+
+  function fmtDate(d: string | null): string {
+    if (!d) return ''
+    try { return new Date(d).toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' }) }
+    catch { return d }
+  }
+
+  function parseActivities(notes: string | null): string[] {
+    if (!notes) return []
+    const match = notes.match(/Optional activities:\s*([^;]+)/)
+    if (!match) return []
+    return match[1].split(',').map((a: string) => a.trim()).filter(Boolean)
+  }
+
+  const activities = parseActivities(travel?.special_requirements ?? null)
+  const hasPenang = travel?.special_requirements?.includes('Penang pre-conference tour: Yes')
 
   // Phase-aware session query
   let upcomingSessions: Session[] = []
@@ -181,6 +202,78 @@ export default async function HomePage() {
               </p>
             </div>
           </Link>
+        )}
+
+        {/* My Itinerary */}
+        {travel && (
+          <section>
+            <div className="flex items-center justify-between mb-2.5">
+              <h2 className="font-bold text-gray-800 text-sm">My Itinerary</h2>
+              <Link href="/itinerary" className="text-xs text-brand-blue font-semibold flex items-center gap-0.5">
+                Full details <ChevronRight size={12} />
+              </Link>
+            </div>
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+              {/* Stay */}
+              {(travel.check_in || travel.hotel_name) && (
+                <div className="flex items-start gap-3 px-4 py-3 border-b border-gray-50">
+                  <div className="w-7 h-7 rounded-lg bg-brand-yellow/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Hotel size={14} className="text-brand-yellow" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold text-gray-700">{travel.hotel_name || 'W Hotel Kuala Lumpur'}</p>
+                    {(travel.check_in || travel.check_out) && (
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        {fmtDate(travel.check_in)}{travel.check_out ? ` → ${fmtDate(travel.check_out)}` : ''}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Flights */}
+              {(travel.arrival_flight || travel.departure_flight) && (
+                <div className="flex items-start gap-3 px-4 py-3 border-b border-gray-50">
+                  <div className="w-7 h-7 rounded-lg bg-brand-blue/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Plane size={14} className="text-brand-blue" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    {travel.arrival_flight && <p className="text-xs text-gray-700"><span className="text-gray-400">In: </span>{travel.arrival_flight}</p>}
+                    {travel.departure_flight && <p className="text-xs text-gray-700 mt-0.5"><span className="text-gray-400">Out: </span>{travel.departure_flight}</p>}
+                  </div>
+                </div>
+              )}
+
+              {/* Dietary */}
+              {travel.dietary_requirements && (
+                <div className="flex items-start gap-3 px-4 py-3 border-b border-gray-50">
+                  <div className="w-7 h-7 rounded-lg bg-brand-red/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Utensils size={14} className="text-brand-red" />
+                  </div>
+                  <p className="text-xs text-brand-red font-medium flex-1 pt-1">{travel.dietary_requirements}</p>
+                </div>
+              )}
+
+              {/* Optional activities */}
+              {(activities.length > 0 || hasPenang) && (
+                <div className="px-4 py-3">
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-2">Optional Activities</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {hasPenang && (
+                      <span className="flex items-center gap-1 text-[10px] font-semibold bg-green-50 text-green-700 px-2 py-1 rounded-full">
+                        <CheckCircle size={10} /> Penang Tour
+                      </span>
+                    )}
+                    {activities.map((a: string, i: number) => (
+                      <span key={i} className="flex items-center gap-1 text-[10px] font-semibold bg-green-50 text-green-700 px-2 py-1 rounded-full">
+                        <CheckCircle size={10} /> {a}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </section>
         )}
 
         {/* Coming Up — phase-aware */}
