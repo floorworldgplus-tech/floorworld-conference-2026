@@ -74,8 +74,15 @@ export default async function HomePage() {
     return match[1].split(',').map((a: string) => a.trim()).filter(Boolean)
   }
 
+  function parseRegistrationType(notes: string | null): string | null {
+    if (!notes) return null
+    const match = notes.match(/Registration:\s*([^;]+)/)
+    return match ? match[1].trim() : null
+  }
+
   const activities = parseActivities(travel?.special_requirements ?? null)
   const hasPenang = travel?.special_requirements?.includes('Penang pre-conference tour: Yes')
+  const registrationType = parseRegistrationType(travel?.special_requirements ?? null)
 
   // Phase-aware session query
   let upcomingSessions: Session[] = []
@@ -214,22 +221,32 @@ export default async function HomePage() {
               </Link>
             </div>
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-              {/* Stay */}
-              {(travel.check_in || travel.hotel_name) && (
-                <div className="flex items-start gap-3 px-4 py-3 border-b border-gray-50">
-                  <div className="w-7 h-7 rounded-lg bg-brand-yellow/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <Hotel size={14} className="text-brand-yellow" />
+              {/* Registration type */}
+              {registrationType && (
+                <div className="flex items-center gap-3 px-4 py-2.5 border-b border-gray-50 bg-brand-blue/[0.03]">
+                  <div className="w-7 h-7 rounded-lg bg-brand-blue/10 flex items-center justify-center flex-shrink-0">
+                    <CheckCircle size={14} className="text-brand-blue" />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold text-gray-700">{travel.hotel_name || 'W Hotel Kuala Lumpur'}</p>
-                    {(travel.check_in || travel.check_out) && (
-                      <p className="text-xs text-gray-400 mt-0.5">
-                        {fmtDate(travel.check_in)}{travel.check_out ? ` → ${fmtDate(travel.check_out)}` : ''}
-                      </p>
-                    )}
-                  </div>
+                  <p className="text-xs font-semibold text-brand-blue">{registrationType}</p>
                 </div>
               )}
+
+              {/* Stay — always show if travel row exists */}
+              <div className="flex items-start gap-3 px-4 py-3 border-b border-gray-50">
+                <div className="w-7 h-7 rounded-lg bg-brand-yellow/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Hotel size={14} className="text-brand-yellow" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-gray-700">{travel.hotel_name || 'W Hotel Kuala Lumpur'}</p>
+                  {(travel.check_in || travel.check_out) ? (
+                    <p className="text-xs text-gray-400 mt-0.5">
+                      {fmtDate(travel.check_in)}{travel.check_out ? ` → ${fmtDate(travel.check_out)}` : ''}
+                    </p>
+                  ) : (
+                    <p className="text-xs text-gray-400 mt-0.5">Dates to be confirmed</p>
+                  )}
+                </div>
+              </div>
 
               {/* Flights */}
               {(travel.arrival_flight || travel.departure_flight) && (

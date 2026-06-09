@@ -119,18 +119,16 @@ export default function ItineraryView({ itinerary }: { itinerary: Itinerary | nu
           </div>
         </Section>
 
-        {/* Accommodation */}
-        {(itinerary.hotel || itinerary.checkin_date) && (
-          <Section colour="bg-[#F5A623]" icon={<Hotel size={15} className="text-white" />} title="Accommodation">
-            <div>
-              <Row label="Hotel" value={itinerary.hotel} />
-              <Row label="Room Type" value={itinerary.room_type} />
-              <Row label="Check-In" value={itinerary.checkin_date} />
-              <Row label="Check-Out" value={itinerary.checkout_date} />
-              <Row label="Sharing With" value={typeof itinerary.sharing_with === 'string' && itinerary.sharing_with !== '0' ? itinerary.sharing_with : null} />
-            </div>
-          </Section>
-        )}
+        {/* Accommodation — always shown; defaults to W Hotel KL */}
+        <Section colour="bg-[#F5A623]" icon={<Hotel size={15} className="text-white" />} title="Accommodation">
+          <div>
+            <Row label="Hotel" value={itinerary.hotel || 'W Hotel Kuala Lumpur'} />
+            <Row label="Room Type" value={itinerary.room_type} />
+            <Row label="Check-In" value={itinerary.checkin_date || 'Dates to be confirmed'} />
+            <Row label="Check-Out" value={itinerary.checkout_date} />
+            <Row label="Sharing With" value={typeof itinerary.sharing_with === 'string' && itinerary.sharing_with !== '0' ? itinerary.sharing_with : null} />
+          </div>
+        </Section>
 
         {/* Flights */}
         {(itinerary.outbound_flight || itinerary.return_flight || itinerary.flight_preference) && (
