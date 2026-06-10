@@ -5,6 +5,7 @@ import Image from 'next/image'
 import {
   MapPin, Phone, Clock, Thermometer, Utensils, DollarSign,
   Heart, ShoppingCart, Ticket, Train, Shield, Wifi, ExternalLink,
+  Plane, FileText, CreditCard, Bus, Umbrella, CheckCircle,
 } from 'lucide-react'
 
 export default async function DestinationPage() {
@@ -94,6 +95,158 @@ export default async function DestinationPage() {
               View Hotel Location
               <ExternalLink size={12} />
             </a>
+          </div>
+        </div>
+
+        {/* ── Flights ── */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="flex items-center gap-3 px-4 py-3.5 border-b border-gray-50">
+            <div className="w-8 h-8 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">
+              <Plane size={16} className="text-brand-blue" />
+            </div>
+            <h2 className="font-bold text-gray-900 text-sm">Flights</h2>
+          </div>
+          <div className="px-4 py-3.5 space-y-3">
+            <p className="text-xs text-gray-600 leading-relaxed">
+              Airfares are not included in the conference package. You are welcome to arrange your own
+              flights, or contact Dee at CIS Event Management for assistance with bookings.
+            </p>
+            <a
+              href="mailto:dee@ciseventmanagement.com.au"
+              className="flex items-center gap-2 text-xs font-semibold text-brand-blue"
+            >
+              <ExternalLink size={12} />
+              dee@ciseventmanagement.com.au
+            </a>
+            <div className="bg-brand-blue/5 border border-brand-blue/10 rounded-xl overflow-hidden mt-1">
+              <div className="flex items-center gap-3 px-3 py-2.5 border-b border-brand-blue/10">
+                <CheckCircle size={13} className="text-brand-blue flex-shrink-0" />
+                <div className="flex-1 flex justify-between items-center">
+                  <span className="text-xs text-gray-500">Recommended arrival</span>
+                  <span className="text-xs font-semibold text-gray-800">Sun 16 August</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 px-3 py-2.5">
+                <CheckCircle size={13} className="text-brand-blue flex-shrink-0" />
+                <div className="flex-1 flex justify-between items-center">
+                  <span className="text-xs text-gray-500">Recommended departure</span>
+                  <span className="text-xs font-semibold text-gray-800">Fri 21 August</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Malaysia Digital Arrival Card ── */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="flex items-center gap-3 px-4 py-3.5 border-b border-gray-50">
+            <div className="w-8 h-8 bg-teal-50 rounded-xl flex items-center justify-center flex-shrink-0">
+              <FileText size={16} className="text-teal-600" />
+            </div>
+            <h2 className="font-bold text-gray-900 text-sm">Malaysia Digital Arrival Card (MDAC)</h2>
+          </div>
+          <div className="px-4 py-3.5 space-y-3">
+            <p className="text-xs text-gray-600 leading-relaxed">
+              All travellers entering Malaysia must complete the MDAC, hold a valid passport, and meet
+              visa requirements for their nationality. The card must be submitted via the Malaysian
+              Immigration website <span className="font-semibold">at least 3 days before travel</span>.
+            </p>
+            <a
+              href="https://imigresen-online.imi.gov.my/mdac/main"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full bg-teal-600 text-white text-xs font-bold py-3 rounded-xl active:scale-95 transition-transform"
+            >
+              <FileText size={14} />
+              Register MDAC Online
+              <ExternalLink size={12} />
+            </a>
+          </div>
+        </div>
+
+        {/* ── Passport & Visa ── */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="flex items-center gap-3 px-4 py-3.5 border-b border-gray-50">
+            <div className="w-8 h-8 bg-purple-50 rounded-xl flex items-center justify-center flex-shrink-0">
+              <CreditCard size={16} className="text-purple-600" />
+            </div>
+            <h2 className="font-bold text-gray-900 text-sm">Passport & Visa</h2>
+          </div>
+          <div className="px-4 py-3.5 space-y-3">
+            <div>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Passport</p>
+              <p className="text-xs text-gray-600 leading-relaxed">
+                Your passport must be valid for at least <span className="font-semibold">six (6) months</span> upon arrival into Malaysia.
+              </p>
+            </div>
+            <div className="border-t border-gray-50 pt-3">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Visa — Australian Citizens</p>
+              <p className="text-xs text-gray-500 mb-2">No visa required, provided:</p>
+              <ul className="space-y-2">
+                {[
+                  'Passport valid for at least 6 months on arrival',
+                  'Visit is up to 3 months only',
+                  'You have a confirmed return or onward international ticket',
+                ].map((req) => (
+                  <li key={req} className="flex items-start gap-2 text-xs text-gray-700">
+                    <CheckCircle size={12} className="text-brand-green mt-0.5 flex-shrink-0" />
+                    {req}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Airport Transfers ── */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="flex items-center gap-3 px-4 py-3.5 border-b border-gray-50">
+            <div className="w-8 h-8 bg-yellow-50 rounded-xl flex items-center justify-center flex-shrink-0">
+              <Bus size={16} className="text-brand-yellow" />
+            </div>
+            <h2 className="font-bold text-gray-900 text-sm">Airport Transfers</h2>
+          </div>
+          <div className="px-4 py-3.5 space-y-3">
+            <div className="bg-brand-green/5 border border-brand-green/15 rounded-xl px-3 py-2.5">
+              <p className="text-xs font-semibold text-brand-green mb-0.5">Group transfers included</p>
+              <p className="text-xs text-gray-600">Sunday 16 August & Friday 21 August only.</p>
+            </div>
+            <p className="text-xs text-gray-600 leading-relaxed">
+              Transfers on all other dates are at your own cost. For a private transfer quote outside
+              these dates, contact Dee at CIS Event Management.
+            </p>
+            <a
+              href="mailto:dee@ciseventmanagement.com.au"
+              className="flex items-center gap-2 text-xs font-semibold text-brand-blue"
+            >
+              <ExternalLink size={12} />
+              dee@ciseventmanagement.com.au
+            </a>
+            <p className="text-xs text-gray-400 italic">Group transfer details and instructions will be shared closer to the event.</p>
+          </div>
+        </div>
+
+        {/* ── Travel Insurance ── */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="flex items-center gap-3 px-4 py-3.5 border-b border-gray-50">
+            <div className="w-8 h-8 bg-red-50 rounded-xl flex items-center justify-center flex-shrink-0">
+              <Umbrella size={16} className="text-brand-red" />
+            </div>
+            <h2 className="font-bold text-gray-900 text-sm">Travel Insurance</h2>
+          </div>
+          <div className="px-4 py-3.5 space-y-2.5">
+            <div className="bg-brand-red/5 border border-brand-red/15 rounded-xl px-3 py-2.5">
+              <p className="text-xs font-semibold text-brand-red">Highly recommended</p>
+              <p className="text-xs text-gray-600 mt-0.5">Should be taken out at time of booking.</p>
+            </div>
+            <p className="text-xs text-gray-600 leading-relaxed">
+              Travel insurance protects against cancellations, serious injury, theft of expensive
+              property, and other unforeseen events. A wide variety of policies are available at many
+              price points — choose what is right for your circumstances.
+            </p>
+            <p className="text-xs text-gray-600 leading-relaxed">
+              Please confirm with your provider that <span className="font-semibold">Malaysia is covered</span> under your policy.
+            </p>
           </div>
         </div>
 
