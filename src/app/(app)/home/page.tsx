@@ -2,8 +2,8 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import {
-  Calendar, Stamp, Users, Building2, Plane, BookOpen,
-  HelpCircle, Map, LayoutDashboard, Bell,
+  Calendar, Stamp, Users, Building2, Plane, MapPin,
+  HelpCircle, Compass, LayoutDashboard, Bell,
   Hotel, Utensils, CheckCircle, ChevronRight,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
@@ -116,8 +116,8 @@ export default async function HomePage() {
     { href: '/itinerary', icon: Plane,         label: 'Itinerary', bg: 'bg-green-50',  fg: 'text-brand-green'  },
     { href: '/suppliers', icon: Building2,     label: 'Suppliers', bg: 'bg-yellow-50', fg: 'text-brand-yellow' },
     { href: '/delegates', icon: Users,         label: 'People',    bg: 'bg-orange-50', fg: 'text-brand-red'    },
-    { href: '/destination', icon: BookOpen,     label: 'Travel & Stay', bg: 'bg-purple-50', fg: 'text-purple-600'   },
-    { href: '/tours',     icon: Map,           label: 'Tours',     bg: 'bg-pink-50',   fg: 'text-pink-600'     },
+    { href: '/destination', icon: MapPin,        label: 'Travel & Stay', bg: 'bg-teal-50',   fg: 'text-teal-600'     },
+    { href: '/tours',       icon: Compass,      label: 'Tours',         bg: 'bg-pink-50',   fg: 'text-pink-600'     },
     { href: '/help',      icon: HelpCircle,    label: 'Help',      bg: 'bg-gray-100',  fg: 'text-gray-500'     },
     ...(isAdmin
       ? [{ href: '/admin', icon: LayoutDashboard, label: 'Admin', bg: 'bg-brand-blue', fg: 'text-white' }]
