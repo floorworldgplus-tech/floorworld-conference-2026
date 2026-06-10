@@ -180,7 +180,7 @@ export default async function DestinationPage() {
               </p>
             </div>
             <div className="border-t border-gray-50 pt-3">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Visa — Australian Citizens</p>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Visa -- Australian Citizens</p>
               <p className="text-xs text-gray-500 mb-2">No visa required, provided:</p>
               <ul className="space-y-2">
                 {[
@@ -242,7 +242,7 @@ export default async function DestinationPage() {
             <p className="text-xs text-gray-600 leading-relaxed">
               Travel insurance protects against cancellations, serious injury, theft of expensive
               property, and other unforeseen events. A wide variety of policies are available at many
-              price points — choose what is right for your circumstances.
+              price points -- choose what is right for your circumstances.
             </p>
             <p className="text-xs text-gray-600 leading-relaxed">
               Please confirm with your provider that <span className="font-semibold">Malaysia is covered</span> under your policy.
@@ -268,7 +268,7 @@ export default async function DestinationPage() {
 
         {/* Weather */}
         <Section icon={Thermometer} iconBg="bg-orange-50" iconFg="text-orange-500" title="Weather in August">
-          <Row label="Temperature" value="25°C – 33°C" />
+          <Row label="Temperature" value="25degC - 33degC" />
           <Row label="Humidity" value="High" />
           <Row label="Rain" value="Short afternoon or evening showers possible" />
           <Note>Pack lightweight clothing, comfortable walking shoes, a small umbrella or rain jacket, and sunscreen.</Note>
@@ -292,7 +292,7 @@ export default async function DestinationPage() {
             </div>
           </div>
           <div className="px-4 py-3.5">
-            <p className="text-xs text-gray-500 mb-3">KL is a food lover&apos;s paradise — from street food to fine dining.</p>
+            <p className="text-xs text-gray-500 mb-3">KL is a food lover&apos;s paradise -- from street food to fine dining.</p>
             <SubHeading>Popular Dining Areas</SubHeading>
             <div className="space-y-2 mb-4">
               <AreaCard name="Bukit Bintang / KLCC" desc="Trendy restaurants, cafés & bars, international cuisine, skyline views" />
@@ -367,7 +367,7 @@ export default async function DestinationPage() {
               <AreaCard name="Central Market" desc="Souvenirs, handicrafts & local art" />
               <AreaCard
                 name="Chinatown, Petaling Street"
-                desc="Street food, bargain shopping, heritage shops & temples. Known for replica items — purchasing counterfeit goods may be restricted in your home country."
+                desc="Street food, bargain shopping, heritage shops & temples. Known for replica items -- purchasing counterfeit goods may be restricted in your home country."
               />
             </div>
           </div>
