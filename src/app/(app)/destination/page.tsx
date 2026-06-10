@@ -1,9 +1,10 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import TopBar from '@/components/layout/TopBar'
+import Image from 'next/image'
 import {
-  Thermometer, ShoppingBag, Utensils, DollarSign, Heart,
-  ShoppingCart, Ticket, Train, Shield, Wifi,
+  MapPin, Phone, Clock, Thermometer, Utensils, DollarSign,
+  Heart, ShoppingCart, Ticket, Train, Shield, Wifi, ExternalLink,
 } from 'lucide-react'
 
 export default async function DestinationPage() {
@@ -17,11 +18,99 @@ export default async function DestinationPage() {
 
       <div className="px-4 py-4 space-y-4 pb-8">
 
-        {/* Destination header */}
-        <div className="bg-brand-blue rounded-2xl px-5 py-4 text-white">
-          <p className="text-xs font-bold uppercase tracking-widest opacity-70 mb-1">Destination</p>
-          <p className="text-2xl font-black">Kuala Lumpur</p>
-          <p className="text-sm opacity-80 mt-0.5">August 2026</p>
+        {/* ── Accommodation ── */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          {/* Hero image */}
+          <div className="relative w-full h-44">
+            <Image
+              src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80"
+              alt="W Kuala Lumpur Hotel"
+              fill
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+            <div className="absolute bottom-0 left-0 px-4 pb-3">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-white/70 mb-0.5">Accommodation</p>
+              <p className="text-lg font-black text-white leading-tight">The W Kuala Lumpur</p>
+            </div>
+          </div>
+
+          <div className="px-4 py-4 space-y-3">
+            {/* Address & phone */}
+            <div className="flex items-start gap-2.5">
+              <MapPin size={14} className="text-brand-blue mt-0.5 flex-shrink-0" />
+              <p className="text-xs text-gray-700">121 Jalan Ampang, Kuala Lumpur, 50450</p>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <Phone size={14} className="text-brand-blue flex-shrink-0" />
+              <p className="text-xs text-gray-700">+60 3 2786 8888</p>
+            </div>
+
+            {/* Description */}
+            <p className="text-xs text-gray-600 leading-relaxed border-t border-gray-50 pt-3">
+              The W Kuala Lumpur is a stylish and bold hotel offering luxury in the heart of the city.
+              With 150 vibrant and modern rooms and suites overlooking the Kuala Lumpur skyline, the
+              hotel combines sleek design with high-tech amenities, including high-speed internet and
+              minibars.
+            </p>
+            <p className="text-xs text-gray-600 leading-relaxed">
+              You will have the option to upgrade as well as book and pay for up to three (3) nights
+              either side of the conference, should you wish to extend.
+            </p>
+
+            {/* Check-in / out / breakfast */}
+            <div className="bg-gray-50 rounded-xl overflow-hidden mt-1">
+              <div className="flex items-center gap-3 px-3 py-2.5 border-b border-gray-100">
+                <Clock size={13} className="text-brand-blue flex-shrink-0" />
+                <div className="flex-1 flex justify-between items-center">
+                  <span className="text-xs text-gray-500">Check-in</span>
+                  <span className="text-xs font-semibold text-gray-800">3:00 pm</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 px-3 py-2.5 border-b border-gray-100">
+                <Clock size={13} className="text-gray-400 flex-shrink-0" />
+                <div className="flex-1 flex justify-between items-center">
+                  <span className="text-xs text-gray-500">Check-out</span>
+                  <span className="text-xs font-semibold text-gray-800">12:00 pm</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 px-3 py-2.5">
+                <Utensils size={13} className="text-brand-green flex-shrink-0" />
+                <div className="flex-1 flex justify-between items-center gap-2">
+                  <span className="text-xs text-gray-500">Breakfast</span>
+                  <span className="text-xs font-semibold text-gray-800 text-right">Flock Restaurant, from 6:30 am</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Map link */}
+            <a
+              href="https://maps.google.com/?q=W+Kuala+Lumpur+Hotel,+121+Jalan+Ampang,+Kuala+Lumpur"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full bg-brand-blue text-white text-xs font-bold py-3 rounded-xl active:scale-95 transition-transform mt-1"
+            >
+              <MapPin size={14} />
+              View Hotel Location
+              <ExternalLink size={12} />
+            </a>
+          </div>
+        </div>
+
+        {/* ── KL Destination header ── */}
+        <div className="relative rounded-2xl overflow-hidden h-32">
+          <Image
+            src="https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800&q=80"
+            alt="Kuala Lumpur skyline"
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/20" />
+          <div className="absolute inset-0 flex flex-col justify-center px-5">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-white/70 mb-1">Destination Guide</p>
+            <p className="text-2xl font-black text-white">Kuala Lumpur</p>
+            <p className="text-sm text-white/80">August 2026</p>
+          </div>
         </div>
 
         {/* Weather */}
@@ -33,32 +122,45 @@ export default async function DestinationPage() {
         </Section>
 
         {/* Where to Eat */}
-        <Section icon={Utensils} iconBg="bg-red-50" iconFg="text-brand-red" title="Where to Eat">
-          <p className="text-xs text-gray-500 mb-3">KL is a food lover&apos;s paradise — from street food to fine dining.</p>
-          <SubHeading>Popular Dining Areas</SubHeading>
-          <div className="space-y-2 mb-4">
-            <AreaCard name="Bukit Bintang / KLCC" desc="Trendy restaurants, cafés & bars, international cuisine, skyline views" />
-            <AreaCard name="Chinatown (Petaling St) & Alor Street" desc="Chinese cuisines, authentic local flavours & street foods" />
-            <AreaCard name="Brickfields / Little India" desc="Indian cuisines" />
-            <AreaCard name="Kampung Baru" desc="Malay cuisines" />
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="relative w-full h-32">
+            <Image
+              src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80"
+              alt="Malaysian food"
+              fill
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+            <div className="absolute bottom-0 left-0 px-4 pb-3 flex items-center gap-2.5">
+              <div className="w-7 h-7 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center flex-shrink-0">
+                <Utensils size={14} className="text-white" />
+              </div>
+              <h2 className="font-bold text-white text-sm">Where to Eat</h2>
+            </div>
           </div>
-          <SubHeading>Must-Try Local Dishes</SubHeading>
-          <div className="flex flex-wrap gap-2">
-            {[
-              'Nasi Lemak',
-              'Satay',
-              'Roti Canai',
-              'Laksa',
-              'Banana Leaf Rice',
-              'Bak Kut Teh (Non-Halal)',
-              'Char Kway Teow (Halal & Non-Halal)',
-            ].map((d) => (
-              <span key={d} className="text-[11px] bg-white border border-gray-100 text-gray-700 px-2.5 py-1 rounded-full shadow-sm">
-                {d}
-              </span>
-            ))}
+          <div className="px-4 py-3.5">
+            <p className="text-xs text-gray-500 mb-3">KL is a food lover&apos;s paradise — from street food to fine dining.</p>
+            <SubHeading>Popular Dining Areas</SubHeading>
+            <div className="space-y-2 mb-4">
+              <AreaCard name="Bukit Bintang / KLCC" desc="Trendy restaurants, cafés & bars, international cuisine, skyline views" />
+              <AreaCard name="Chinatown (Petaling St) & Alor Street" desc="Chinese cuisines, authentic local flavours & street foods" />
+              <AreaCard name="Brickfields / Little India" desc="Indian cuisines" />
+              <AreaCard name="Kampung Baru" desc="Malay cuisines" />
+            </div>
+            <SubHeading>Must-Try Local Dishes</SubHeading>
+            <div className="flex flex-wrap gap-2">
+              {[
+                'Nasi Lemak', 'Satay', 'Roti Canai', 'Laksa',
+                'Banana Leaf Rice', 'Bak Kut Teh (Non-Halal)',
+                'Char Kway Teow (Halal & Non-Halal)',
+              ].map((d) => (
+                <span key={d} className="text-[11px] bg-gray-50 border border-gray-100 text-gray-700 px-2.5 py-1 rounded-full">
+                  {d}
+                </span>
+              ))}
+            </div>
           </div>
-        </Section>
+        </div>
 
         {/* Money */}
         <Section icon={DollarSign} iconBg="bg-green-50" iconFg="text-brand-green" title="Money & Currency">
@@ -87,19 +189,36 @@ export default async function DestinationPage() {
         </Section>
 
         {/* Shopping */}
-        <Section icon={ShoppingCart} iconBg="bg-purple-50" iconFg="text-purple-600" title="Shopping in Kuala Lumpur">
-          <p className="text-xs text-gray-500 mb-3">KL is a top shopping destination with options for every budget.</p>
-          <div className="space-y-2">
-            <AreaCard name="Pavilion KL" desc="Luxury & international brands" />
-            <AreaCard name="Suria KLCC" desc="Shopping beneath the Petronas Twin Towers" />
-            <AreaCard name="Mid Valley Megamall" desc="One of the largest malls in Malaysia (20 min from KL City Centre)" />
-            <AreaCard name="Central Market" desc="Souvenirs, handicrafts & local art" />
-            <AreaCard
-              name="Chinatown, Petaling Street"
-              desc="Street food, bargain shopping, heritage shops & temples. Known for replica items — purchasing counterfeit goods may be restricted in your home country."
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="relative w-full h-28">
+            <Image
+              src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80"
+              alt="Shopping in Kuala Lumpur"
+              fill
+              className="object-cover"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+            <div className="absolute bottom-0 left-0 px-4 pb-3 flex items-center gap-2.5">
+              <div className="w-7 h-7 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center flex-shrink-0">
+                <ShoppingCart size={14} className="text-white" />
+              </div>
+              <h2 className="font-bold text-white text-sm">Shopping in KL</h2>
+            </div>
           </div>
-        </Section>
+          <div className="px-4 py-3.5">
+            <p className="text-xs text-gray-500 mb-3">KL is a top shopping destination with options for every budget.</p>
+            <div className="space-y-2">
+              <AreaCard name="Pavilion KL" desc="Luxury & international brands" />
+              <AreaCard name="Suria KLCC" desc="Shopping beneath the Petronas Twin Towers" />
+              <AreaCard name="Mid Valley Megamall" desc="One of the largest malls in Malaysia (20 min from KL City Centre)" />
+              <AreaCard name="Central Market" desc="Souvenirs, handicrafts & local art" />
+              <AreaCard
+                name="Chinatown, Petaling Street"
+                desc="Street food, bargain shopping, heritage shops & temples. Known for replica items — purchasing counterfeit goods may be restricted in your home country."
+              />
+            </div>
+          </div>
+        </div>
 
         {/* Discounts */}
         <Section icon={Ticket} iconBg="bg-yellow-50" iconFg="text-brand-yellow" title="Tourist Discounts & Tax Refunds">
@@ -150,11 +269,7 @@ export default async function DestinationPage() {
 }
 
 function Section({
-  icon: Icon,
-  iconBg,
-  iconFg,
-  title,
-  children,
+  icon: Icon, iconBg, iconFg, title, children,
 }: {
   icon: React.ElementType
   iconBg: string
