@@ -15,7 +15,7 @@ const INCLUSIVE: {
     date: 'Monday 17 August',
     title: 'City Tour including Lunch',
     description:
-      'Explore all that KL has to offer — visits to Batu Caves and Selangor, plus photo stops at the National Monument and King's Palace.',
+      "Explore all that KL has to offer — visits to Batu Caves and Selangor, plus photo stops at the National Monument and King's Palace.",
     image: 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800&q=80',
     imageAlt: 'Kuala Lumpur city',
   },
