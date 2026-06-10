@@ -116,7 +116,7 @@ export default async function HomePage() {
     { href: '/itinerary', icon: Plane,         label: 'Itinerary', bg: 'bg-green-50',  fg: 'text-brand-green'  },
     { href: '/suppliers', icon: Building2,     label: 'Suppliers', bg: 'bg-yellow-50', fg: 'text-brand-yellow' },
     { href: '/delegates', icon: Users,         label: 'People',    bg: 'bg-orange-50', fg: 'text-brand-red'    },
-    { href: '/resources', icon: BookOpen,      label: 'Resources', bg: 'bg-purple-50', fg: 'text-purple-600'   },
+    { href: '/destination', icon: BookOpen,     label: 'Travel & Stay', bg: 'bg-purple-50', fg: 'text-purple-600'   },
     { href: '/feedback',  icon: MessageSquare, label: 'Feedback',  bg: 'bg-pink-50',   fg: 'text-pink-600'     },
     { href: '/help',      icon: HelpCircle,    label: 'Help',      bg: 'bg-gray-100',  fg: 'text-gray-500'     },
     ...(isAdmin
