@@ -19,7 +19,7 @@ export default async function DestinationPage() {
 
       <div className="px-4 py-4 space-y-4 pb-8">
 
-        {/* ── Accommodation ── */}
+        {/* -- Accommodation -- */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           {/* Hero image */}
           <div className="relative w-full h-44">
@@ -98,7 +98,7 @@ export default async function DestinationPage() {
           </div>
         </div>
 
-        {/* ── Flights ── */}
+        {/* -- Flights -- */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="flex items-center gap-3 px-4 py-3.5 border-b border-gray-50">
             <div className="w-8 h-8 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -137,7 +137,7 @@ export default async function DestinationPage() {
           </div>
         </div>
 
-        {/* ── Malaysia Digital Arrival Card ── */}
+        {/* -- Malaysia Digital Arrival Card -- */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="flex items-center gap-3 px-4 py-3.5 border-b border-gray-50">
             <div className="w-8 h-8 bg-teal-50 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -164,7 +164,7 @@ export default async function DestinationPage() {
           </div>
         </div>
 
-        {/* ── Passport & Visa ── */}
+        {/* -- Passport & Visa -- */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="flex items-center gap-3 px-4 py-3.5 border-b border-gray-50">
             <div className="w-8 h-8 bg-purple-50 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -198,7 +198,7 @@ export default async function DestinationPage() {
           </div>
         </div>
 
-        {/* ── Airport Transfers ── */}
+        {/* -- Airport Transfers -- */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="flex items-center gap-3 px-4 py-3.5 border-b border-gray-50">
             <div className="w-8 h-8 bg-yellow-50 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -226,7 +226,7 @@ export default async function DestinationPage() {
           </div>
         </div>
 
-        {/* ── Travel Insurance ── */}
+        {/* -- Travel Insurance -- */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="flex items-center gap-3 px-4 py-3.5 border-b border-gray-50">
             <div className="w-8 h-8 bg-red-50 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -250,7 +250,7 @@ export default async function DestinationPage() {
           </div>
         </div>
 
-        {/* ── KL Destination header ── */}
+        {/* -- KL Destination header -- */}
         <div className="relative rounded-2xl overflow-hidden h-32">
           <Image
             src="https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800&q=80"
@@ -295,7 +295,7 @@ export default async function DestinationPage() {
             <p className="text-xs text-gray-500 mb-3">KL is a food lover&apos;s paradise -- from street food to fine dining.</p>
             <SubHeading>Popular Dining Areas</SubHeading>
             <div className="space-y-2 mb-4">
-              <AreaCard name="Bukit Bintang / KLCC" desc="Trendy restaurants, cafés & bars, international cuisine, skyline views" />
+              <AreaCard name="Bukit Bintang / KLCC" desc="Trendy restaurants, cafes & bars, international cuisine, skyline views" />
               <AreaCard name="Chinatown (Petaling St) & Alor Street" desc="Chinese cuisines, authentic local flavours & street foods" />
               <AreaCard name="Brickfields / Little India" desc="Indian cuisines" />
               <AreaCard name="Kampung Baru" desc="Malay cuisines" />
@@ -413,7 +413,7 @@ export default async function DestinationPage() {
           <Row label="SIM / eSIM" value="Available at the airport and malls" />
           <Row label="Plug type" value="Type G (same as UK)" />
           <Row label="Language" value="English is widely spoken" />
-          <Row label="Wi-Fi" value="Available in most hotels, cafés and malls" />
+          <Row label="Wi-Fi" value="Available in most hotels, cafes and malls" />
         </Section>
 
       </div>
