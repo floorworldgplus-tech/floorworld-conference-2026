@@ -85,33 +85,29 @@ WHERE NOT EXISTS (SELECT 1 FROM auth.users WHERE email = 'taylorm@victoriacarpet
 -- ============================================================
 
 -- Pat Urquhart
-INSERT INTO profiles (id, email, full_name, role, company, bio, hotel_name, check_in, check_out, is_active)
-SELECT au.id, au.email, 'Pat Urquhart', 'delegate', 'Smith''s Floorworld Ringwood', 'Manager',
-  'W Kuala Lumpur', '2026-08-16', '2026-08-21', true
+INSERT INTO profiles (id, email, full_name, role, company, bio, is_active)
+SELECT au.id, au.email, 'Pat Urquhart', 'delegate', 'Smith''s Floorworld Ringwood', 'Manager', true
 FROM auth.users au WHERE au.email = 'pat@smithsfloors.com.au'
   AND NOT EXISTS (SELECT 1 FROM profiles p WHERE p.id = au.id)
 ON CONFLICT DO NOTHING;
 
 -- Ryan Smith
-INSERT INTO profiles (id, email, full_name, role, company, bio, hotel_name, check_in, check_out, is_active)
-SELECT au.id, au.email, 'Ryan Smith', 'delegate', 'Smith''s Floorworld Ringwood', '',
-  'W Kuala Lumpur', '2026-08-15', '2026-08-21', true
+INSERT INTO profiles (id, email, full_name, role, company, bio, is_active)
+SELECT au.id, au.email, 'Ryan Smith', 'delegate', 'Smith''s Floorworld Ringwood', '', true
 FROM auth.users au WHERE au.email = 'ryansmith@smithsfloors.com.au'
   AND NOT EXISTS (SELECT 1 FROM profiles p WHERE p.id = au.id)
 ON CONFLICT DO NOTHING;
 
 -- Brendan Fall
-INSERT INTO profiles (id, email, full_name, role, company, bio, hotel_name, check_in, check_out, is_active)
-SELECT au.id, au.email, 'Brendan Fall', 'supplier', 'Victoria Carpets', '',
-  'W Kuala Lumpur', '2026-08-16', '2026-08-21', true
+INSERT INTO profiles (id, email, full_name, role, company, bio, is_active)
+SELECT au.id, au.email, 'Brendan Fall', 'supplier', 'Victoria Carpets', '', true
 FROM auth.users au WHERE au.email = 'fallb@victoriacarpets.com.au'
   AND NOT EXISTS (SELECT 1 FROM profiles p WHERE p.id = au.id)
 ON CONFLICT DO NOTHING;
 
 -- Matthew Taylor
-INSERT INTO profiles (id, email, full_name, role, company, bio, hotel_name, check_in, check_out, is_active)
-SELECT au.id, au.email, 'Matthew Taylor', 'supplier', 'Victoria Carpets', 'Victorian State Manager',
-  'W Kuala Lumpur', '2026-08-16', '2026-08-21', true
+INSERT INTO profiles (id, email, full_name, role, company, bio, is_active)
+SELECT au.id, au.email, 'Matthew Taylor', 'supplier', 'Victoria Carpets', 'Victorian State Manager', true
 FROM auth.users au WHERE au.email = 'taylorm@victoriacarpets.com.au'
   AND NOT EXISTS (SELECT 1 FROM profiles p WHERE p.id = au.id)
 ON CONFLICT DO NOTHING;
