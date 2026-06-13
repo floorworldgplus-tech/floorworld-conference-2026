@@ -34,11 +34,12 @@ export default async function ItineraryPage() {
     .eq('user_id', user.id)
     .single()
 
+  const spec = travel?.special_requirements ?? null
   const itinerary = (profile || travel) ? {
     preferred_name: null,
     full_name: profile?.full_name ?? null,
     organisation: profile?.company ?? null,
-    registration_type: travel?.special_requirements?.match(/Registration:\s*([^;]+)/)?.[1]?.trim() ?? null,
+    registration_type: spec?.match(/Registration:\s*([^;]+)/)?.[1]?.trim() ?? null,
     dietary_requirements: travel?.dietary_requirements ?? null,
     tshirt_size: null,
     tshirt_quantity: null,
@@ -46,13 +47,13 @@ export default async function ItineraryPage() {
     room_type: travel?.room_number ?? null,
     checkin_date: formatDate(travel?.check_in ?? null),
     checkout_date: formatDate(travel?.check_out ?? null),
-    sharing_with: null,
+    sharing_with: spec?.match(/Sharing with:\s*([^;]+)/)?.[1]?.trim() ?? null,
     flight_preference: null,
     outbound_flight: travel?.arrival_flight ?? null,
     return_flight: travel?.departure_flight ?? null,
     transfer_arrival: null,
     transfer_departure: null,
-    activities: parseActivities(travel?.special_requirements ?? null),
+    activities: parseActivities(spec),
     program: [],
   } : null
 
